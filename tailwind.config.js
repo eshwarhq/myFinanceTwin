@@ -9,6 +9,25 @@ module.exports = {
   ],
   theme: {
     extend: {
+      darkMode: 'class',
+      colors: {
+        border: '#e5e7eb', // or your desired color
+        ring: '#1a73e8',   // or your desired color
+      },
+      ringColor: {
+        brand: '#1a73e8', // for ring-brand/50
+      },
+       fontFamily: {
+        sans: ['Inter', 'sans-serif'], // 👈 Apply to body / text
+      },
+      borderRadius: {
+        DEFAULT: '0.5rem', // Rounded corners by default (8px)
+        md: '0.75rem',
+        lg: '1rem',
+      },
+      ringColor: {
+        'brand': '#1a73e8', // or your desired color
+      },
       colors: {
         background: 'var(--color-background)',
         foreground: 'var(--color-foreground)',
