@@ -322,7 +322,7 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
       )}
 
       {/* Header */}
-      <header className="bg-card border-b border-border shadow-soft sticky top-0 z-40">
+      <header className="bg-white border-b border-border shadow-soft sticky top-0 z-40">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -383,7 +383,7 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
       )}
 
       {/* Dashboard Content */}
-      <main className="container mx-auto px-6 py-8">
+      <main className="container mx-auto px-6 py-4 pt-16">
         {!selectedCard ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Net Worth Trend Card */}

@@ -9,6 +9,13 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontSize: {
+        sm: '1.15rem',     // override default
+        base: '1.2rem',
+        lg: '1.45rem',
+        xl: '1.6rem',
+
+      },
       darkMode: 'class',
       colors: {
         border: '#e5e7eb', // or your desired color

@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { 
-  Mic, 
-  Sparkles, 
-  MessageSquare, 
-  TrendingUp, 
-  Search, 
-  Puzzle, 
-  Download, 
-  Shield, 
+import {
+  Mic,
+  Sparkles,
+  MessageSquare,
+  TrendingUp,
+  Search,
+  Puzzle,
+  Download,
+  Shield,
   Check,
   DollarSign,
   Volume2
@@ -82,11 +82,11 @@ export function Homepage() {
               </div>
               <span className="text-xl font-medium">MyFinance Twin AI</span>
             </div>
-            
+
             <div className="hidden md:flex items-center space-x-8">
               <a href="#features" className="text-secondary-foreground hover:text-primary transition-colors">Features</a>
               <a href="#security" className="text-secondary-foreground hover:text-primary transition-colors">Security</a>
-              <Button 
+              <Button
                 onClick={() => navigate('/login')}
                 className="gradient-accent hover:gradient-accent-hover text-white border-0 shadow-soft"
               >
@@ -94,7 +94,7 @@ export function Homepage() {
               </Button>
             </div>
 
-            <Button 
+            <Button
               onClick={() => navigate('/login')}
               className="md:hidden gradient-accent hover:gradient-accent-hover text-white border-0 shadow-soft"
             >
@@ -107,20 +107,20 @@ export function Homepage() {
       {/* Hero Section */}
       <section className="container mx-auto px-6 py-20 md:py-32">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="mb-6 max-w-3xl mx-auto">
-            AI today can answer general financial questions—but not yours.
+          <h1 className="mb-6 max-w-3xl mx-auto text-2xl font-medium">
+            AI That Understands Your Finances <br />
+            Not Just Anyone's.
           </h1>
-          
-          <h2 className="mb-12 text-muted-foreground max-w-2xl mx-auto">
+
+          <h2 className="mb-12 text-muted-foreground max-w-2xl text-base mx-auto">
             MyFinance Twin AI is your intelligent financial co-pilot that simulates your future, spots anomalies, and guides you to better decisions.
           </h2>
 
           {/* Chat Input Bar */}
           <div className="max-w-2xl mx-auto">
-            <div 
-              className={`relative bg-card border-2 rounded-xl p-4 shadow-soft-lg transition-all duration-300 ${
-                isHovered ? 'border-primary shadow-lg' : 'border-border'
-              }`}
+            <div
+              className={`relative bg-card border-2 rounded-xl p-4 shadow-soft-lg transition-all duration-300 ${isHovered ? 'border-primary shadow-lg' : 'border-border'
+                }`}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
@@ -142,12 +142,12 @@ export function Homepage() {
                   <Mic className="w-5 h-5 text-muted-foreground group-hover:text-primary" />
                 </button>
               </div>
-              
+
               {isHovered && (
                 <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-cyan-500/10 pointer-events-none" />
               )}
             </div>
-            
+
             <p className="mt-4 text-sm text-muted-foreground">
               Start your conversation to create your personalized financial twin
             </p>
@@ -161,12 +161,12 @@ export function Homepage() {
           <div className="text-center mb-16">
             <h2 className="mb-4">A Co-pilot for Your Entire Financial Life</h2>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {coreFeatures.map((feature, index) => {
               const IconComponent = feature.icon;
               return (
-                <div 
+                <div
                   key={index}
                   className="bg-card rounded-xl p-8 shadow-soft hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02] border border-border/50"
                 >
@@ -239,11 +239,11 @@ export function Homepage() {
               const height = Math.sin(i * 0.3) * 40 + 80;
               const x = (i * 20) + 50;
               return (
-                <rect 
+                <rect
                   key={i}
-                  x={x} 
-                  y={200 - height/2} 
-                  width="8" 
+                  x={x}
+                  y={200 - height / 2}
+                  width="8"
                   height={height}
                   fill="url(#soundwave-gradient)"
                   opacity="0.6"
@@ -261,13 +261,13 @@ export function Homepage() {
             <p className="text-muted-foreground text-lg mb-12 max-w-2xl mx-auto leading-relaxed">
               Talk to your finances naturally. Ask complex questions in English, Hindi, or your preferred regional language, anywhere, anytime.
             </p>
-            
+
             {/* Language Pills */}
             <div className="flex justify-center items-center space-x-4 mb-8">
               <Volume2 className="w-6 h-6 text-primary" />
               <div className="flex space-x-3">
                 {languages.map((language, index) => (
-                  <div 
+                  <div
                     key={index}
                     className="px-6 py-3 bg-card rounded-full border border-border shadow-soft text-sm font-medium hover:shadow-soft-lg transition-shadow"
                   >
@@ -292,42 +292,41 @@ export function Homepage() {
               Join thousands of users who have transformed their financial decision-making with AI-powered insights.
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-card rounded-xl p-8 shadow-soft hover:shadow-soft-lg transition-shadow text-center">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
-                <Sparkles className="w-6 h-6 text-blue-600" />
+            {[
+              {
+                title: 'Intelligent Analysis',
+                icon: <Sparkles className="w-6 h-6 text-blue-600" />,
+                bg: 'bg-blue-100',
+                text: 'Advanced AI that understands your unique financial patterns and provides personalized insights.'
+              },
+              {
+                title: 'Future Simulation',
+                icon: <div className="w-6 h-6 bg-green-600 rounded-full" />,
+                bg: 'bg-green-100',
+                text: 'Visualize different financial scenarios and their long-term impact on your goals.'
+              },
+              {
+                title: 'Anomaly Detection',
+                icon: <div className="w-6 h-6 bg-purple-600 rounded-sm" />,
+                bg: 'bg-purple-100',
+                text: 'Automatically spot unusual spending patterns and potential financial risks.'
+              }
+            ].map(({ title, icon, bg, text }) => (
+              <div key={title} className="bg-card rounded-xl p-8 shadow-soft hover:shadow-soft-lg transition-shadow text-center">
+                <div className={`w-12 h-12 ${bg} rounded-lg flex items-center justify-center mb-4 mx-auto`}>
+                  {icon}
+                </div>
+                <h3 className="text-lg font-semibold mb-3">{title}</h3>
+                <p className="text-sm text-muted-foreground">{text}</p>
               </div>
-              <h3 className="mb-3">Intelligent Analysis</h3>
-              <p className="text-muted-foreground">
-                Advanced AI that understands your unique financial patterns and provides personalized insights.
-              </p>
-            </div>
-
-            <div className="bg-card rounded-xl p-8 shadow-soft hover:shadow-soft-lg transition-shadow text-center">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
-                <div className="w-6 h-6 bg-green-600 rounded-full" />
-              </div>
-              <h3 className="mb-3">Future Simulation</h3>
-              <p className="text-muted-foreground">
-                Visualize different financial scenarios and their long-term impact on your goals.
-              </p>
-            </div>
-
-            <div className="bg-card rounded-xl p-8 shadow-soft hover:shadow-soft-lg transition-shadow text-center">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
-                <div className="w-6 h-6 bg-purple-600 rounded-sm" />
-              </div>
-              <h3 className="mb-3">Anomaly Detection</h3>
-              <p className="text-muted-foreground">
-                Automatically spot unusual spending patterns and potential financial risks.
-              </p>
-            </div>
+            ))}
           </div>
 
           {/* Final CTA */}
           <div className="text-center mt-16">
-            <Button 
+            <Button
               onClick={() => navigate('/signup')}
               size="lg"
               className="gradient-accent hover:gradient-accent-hover text-white border-0 shadow-soft-lg px-8 h-14 text-lg"
