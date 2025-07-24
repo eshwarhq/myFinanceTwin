@@ -1,0 +1,53 @@
+{
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "dev": "tsc --watch --outDir dist --preserveWatchOutput",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "node dist/index.js",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/ioredis": "^4.28.10",
+    "compression": "^1.8.1",
+    "connect-redis": "^9.0.0",
+    "cors": "^2.8.5",
+    "express": "4.21.2",
+    "express-rate-limit": "^8.0.1",
+    "express-session": "^1.18.2",
+    "firebase-admin": "^12.7.0",
+    "firebase-functions": "^6.4.0",
+    "helmet": "^8.1.0",
+    "hpp": "^0.2.3",
+    "ioredis": "^5.6.1",
+    "morgan": "^1.10.1",
+    "path-to-regexp": "6.2.1"
+  },
+  "devDependencies": {
+    "@types/compression": "^1.8.1",
+    "@types/cors": "^2.8.19",
+    "@types/express": "4.17.17",
+    "@types/helmet": "^0.0.48",
+    "@types/hpp": "^0.2.6",
+    "@types/morgan": "^1.9.10",
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^5.7.3"
+  },
+  "private": true,
+  "resolutions": {
+    "express": "4.21.2",
+    "path-to-regexp": "6.2.1"
+  }
+}
