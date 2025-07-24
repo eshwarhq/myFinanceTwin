@@ -32,10 +32,9 @@ import {
   Star,
   Award
 } from 'lucide-react';
-import { Page } from '../App';
+import { useNavigate } from 'react-router-dom';
 
 interface DashboardProps {
-  onNavigate: (page: Page) => void;
   userName: string;
   isFirstTime?: boolean;
   onOnboardingComplete?: () => void;
@@ -173,7 +172,8 @@ const trendingStocks = [
   { name: 'Microsoft Corp.', symbol: 'MSFT', change: '+2.1%', rationale: 'Cloud growth accelerating with new AI features' }
 ];
 
-export function Dashboard({ onNavigate, userName, isFirstTime = false, onOnboardingComplete }: DashboardProps) {
+export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete }: DashboardProps) {
+  const navigate = useNavigate();
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   const [chatInput, setChatInput] = useState('');
   const [timeframe, setTimeframe] = useState('6M');
@@ -339,7 +339,7 @@ export function Dashboard({ onNavigate, userName, isFirstTime = false, onOnboard
               <Button 
                 variant="ghost" 
                 size="sm"
-                onClick={() => onNavigate('chat')}
+                onClick={() => navigate('/chat')}
               >
                 <MessageCircle className="w-4 h-4 mr-2" />
                 Chat

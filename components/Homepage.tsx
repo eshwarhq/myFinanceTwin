@@ -14,13 +14,10 @@ import {
   DollarSign,
   Volume2
 } from 'lucide-react';
-import { Page } from '../App';
+import { useNavigate } from 'react-router-dom';
 
-interface HomepageProps {
-  onNavigate: (page: Page) => void;
-}
-
-export function Homepage({ onNavigate }: HomepageProps) {
+export function Homepage() {
+  const navigate = useNavigate();
   const [chatInput, setChatInput] = useState('');
   const [isHovered, setIsHovered] = useState(false);
 
@@ -90,7 +87,7 @@ export function Homepage({ onNavigate }: HomepageProps) {
               <a href="#features" className="text-secondary-foreground hover:text-primary transition-colors">Features</a>
               <a href="#security" className="text-secondary-foreground hover:text-primary transition-colors">Security</a>
               <Button 
-                onClick={() => onNavigate('login')}
+                onClick={() => navigate('/login')}
                 className="gradient-accent hover:gradient-accent-hover text-white border-0 shadow-soft"
               >
                 Sign In
@@ -98,7 +95,7 @@ export function Homepage({ onNavigate }: HomepageProps) {
             </div>
 
             <Button 
-              onClick={() => onNavigate('login')}
+              onClick={() => navigate('/login')}
               className="md:hidden gradient-accent hover:gradient-accent-hover text-white border-0 shadow-soft"
             >
               Sign In
@@ -136,7 +133,7 @@ export function Homepage({ onNavigate }: HomepageProps) {
                     className="border-0 bg-transparent text-lg p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && chatInput.trim()) {
-                        onNavigate('signup');
+                        navigate('/signup');
                       }
                     }}
                   />
@@ -331,7 +328,7 @@ export function Homepage({ onNavigate }: HomepageProps) {
           {/* Final CTA */}
           <div className="text-center mt-16">
             <Button 
-              onClick={() => onNavigate('signup')}
+              onClick={() => navigate('/signup')}
               size="lg"
               className="gradient-accent hover:gradient-accent-hover text-white border-0 shadow-soft-lg px-8 h-14 text-lg"
             >
