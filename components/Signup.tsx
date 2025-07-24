@@ -5,14 +5,14 @@ import { Label } from './ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Checkbox } from './ui/checkbox';
 import { ArrowLeft, Sparkles, Shield, Lock, Users } from 'lucide-react';
-import { Page } from '../App';
+import { useNavigate } from 'react-router-dom';
 
 interface SignupProps {
-  onNavigate: (page: Page) => void;
   onSignup: () => void;
 }
 
-export function Signup({ onNavigate, onSignup }: SignupProps) {
+export function Signup({ onSignup }: SignupProps) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -38,7 +38,7 @@ export function Signup({ onNavigate, onSignup }: SignupProps) {
         {/* Back Button */}
         <Button 
           variant="ghost" 
-          onClick={() => onNavigate('home')}
+          onClick={() => navigate('/')}
           className="mb-6 -ml-2"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
@@ -127,7 +127,7 @@ export function Signup({ onNavigate, onSignup }: SignupProps) {
                   <p className="text-sm text-muted-foreground">
                     Already have an account?{' '}
                     <button 
-                      onClick={() => onNavigate('login')}
+                      onClick={() => navigate('/login')}
                       className="text-primary hover:underline font-medium"
                     >
                       Sign in here

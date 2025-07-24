@@ -4,14 +4,14 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { ArrowLeft, Sparkles } from 'lucide-react';
-import { Page } from '../App';
-
+import { useNavigate } from 'react-router-dom';
 interface LoginProps {
-  onNavigate: (page: Page) => void;
   onLogin: () => void;
 }
 
-export function Login({ onNavigate, onLogin }: LoginProps) {
+
+export function Login({ onLogin }: LoginProps) {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -25,6 +25,7 @@ export function Login({ onNavigate, onLogin }: LoginProps) {
     await new Promise(resolve => setTimeout(resolve, 1000));
     setIsLoading(false);
     onLogin();
+    navigate('/dashboard'); // 👈 moves to twin builder
   };
 
   return (
@@ -33,7 +34,7 @@ export function Login({ onNavigate, onLogin }: LoginProps) {
         {/* Back Button */}
         <Button 
           variant="ghost" 
-          onClick={() => onNavigate('home')}
+          onClick={() => navigate('/')}
           className="mb-6 -ml-2"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
@@ -92,7 +93,7 @@ export function Login({ onNavigate, onLogin }: LoginProps) {
               <p className="text-sm text-muted-foreground">
                 Don't have an account?{' '}
                 <button 
-                  onClick={() => onNavigate('signup')}
+                  onClick={() => navigate('/signup')}
                   className="text-primary hover:underline font-medium"
                 >
                   Create your secure account

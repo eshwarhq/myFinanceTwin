@@ -18,7 +18,7 @@ module.exports = {
         brand: '#1a73e8', // for ring-brand/50
       },
        fontFamily: {
-        sans: ['Inter', 'sans-serif'], // 👈 Apply to body / text
+        sans: ['Google Sans', 'Inter', 'sans-serif'], // 👈 Apply to body / text
       },
       borderRadius: {
         DEFAULT: '0.5rem', // Rounded corners by default (8px)

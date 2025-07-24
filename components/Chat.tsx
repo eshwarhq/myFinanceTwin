@@ -13,10 +13,9 @@ import {
   ChevronDown,
   ChevronUp
 } from 'lucide-react';
-import { Page } from '../App';
+import { useNavigate } from 'react-router-dom';
 
 interface ChatProps {
-  onNavigate: (page: Page) => void;
   userName: string;
 }
 
@@ -29,7 +28,8 @@ interface Message {
   explanation?: string;
 }
 
-export function Chat({ onNavigate, userName }: ChatProps) {
+export function Chat({ userName }: ChatProps) {
+  const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -132,7 +132,7 @@ export function Chat({ onNavigate, userName }: ChatProps) {
               <Button 
                 variant="ghost" 
                 size="sm"
-                onClick={() => onNavigate('dashboard')}
+                onClick={() => navigate('/dashboard')}
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Dashboard
