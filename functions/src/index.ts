@@ -3,12 +3,15 @@ import { onRequest } from 'firebase-functions/v2/https';
 // import * as logger from 'firebase-functions/logger';
 import * as admin from 'firebase-admin';
 import app from './server';
+import * as dotenv from 'dotenv';
 
 // ✅ Initialize Admin SDK (one-time)
 if (!admin.apps.length) {
   admin.initializeApp();
   console.log('Firebase Admin Initialized');
 }
+
+dotenv.config();
 
 // ✅ Export HTTPS function with options
 export const api = onRequest(
@@ -20,7 +23,8 @@ export const api = onRequest(
   app
 );
 
-const PORT = 3000;
+const PORT = process.env.PORT || 5000;
+console.log("Express server started at port: ", PORT)
 app.listen(PORT, () => {
   console.log(`Dev server: ${PORT}`);
 });

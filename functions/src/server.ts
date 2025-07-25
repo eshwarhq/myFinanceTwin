@@ -8,6 +8,7 @@ import compression from 'compression';
 import { rateLimit } from 'express-rate-limit';
 import oneRoute from './routes/oneRoute';
 import redisMiddleware from './middlewares/redisMiddleware';
+import RedisConnection from './connections/redisConnection';
 
 const app = express();
 
@@ -48,6 +49,12 @@ app.use(limiter);
 // ✅ Simple Health Check (Optional)
 app.get('/api/health', (_req, res) => {
   res.status(200).send('🔥 Firebase Express API up and running!');
+});
+
+app.get('/health/redis', async (req, res) => {
+  const client = RedisConnection.getInstance().getClient();
+  const pong = await client.ping();
+  res.send({ status: pong });
 });
 
 app.use(redisMiddleware)

@@ -18,26 +18,59 @@ export function Signup({ onSignup }: SignupProps) {
     email: '',
     password: ''
   });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!formData.name || !formData.email || !formData.password || !agreedToTerms) return;
-    
-    setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsLoading(false);
-    onSignup();
+
+    try {
+      setIsLoading(true);
+
+      const payload = { ...formData, agreedToTerms }; // ⬅️ include it if needed by backend
+
+      const res1 = await fetch('http://localhost:5000/api/health', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      console.log(res1)
+
+      const res = await fetch('http://localhost:5000/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        const errorMsg = await res.text();
+        throw new Error(errorMsg || 'Signup failed');
+      }
+
+      // optional fake delay for UX
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      setIsLoading(false);
+      onSignup(); // 🥳 All good, proceed
+    } catch (error) {
+      console.error('Signup error:', error);
+      setIsLoading(false); // Don’t leave it spinning forever on error
+    }
   };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-5xl">
         {/* Back Button */}
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           onClick={() => navigate('/')}
           className="mb-6 -ml-2"
         >
@@ -67,33 +100,33 @@ export function Signup({ onSignup }: SignupProps) {
                       id="name"
                       type="text"
                       value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="Enter your full name"
                       required
                       className="h-12 border-border focus:border-primary transition-colors"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
                     <Input
                       id="email"
                       type="email"
                       value={formData.email}
-                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="Enter your email"
                       required
                       className="h-12 border-border focus:border-primary transition-colors"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="password">Password</Label>
                     <Input
                       id="password"
                       type="password"
                       value={formData.password}
-                      onChange={(e) => setFormData({...formData, password: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                       placeholder="Create a secure password"
                       required
                       className="h-12 border-border focus:border-primary transition-colors"
@@ -101,7 +134,7 @@ export function Signup({ onSignup }: SignupProps) {
                   </div>
 
                   <div className="flex items-start space-x-3 pt-4">
-                    <Checkbox 
+                    <Checkbox
                       id="terms"
                       checked={agreedToTerms}
                       onCheckedChange={(checked: boolean) => setAgreedToTerms(checked as boolean)}
@@ -114,7 +147,7 @@ export function Signup({ onSignup }: SignupProps) {
                     </Label>
                   </div>
 
-                  <Button 
+                  <Button
                     type="submit"
                     disabled={isLoading || !agreedToTerms}
                     className="w-full h-12 gradient-accent hover:gradient-accent-hover text-white border-0 shadow-soft mt-6"
@@ -126,7 +159,7 @@ export function Signup({ onSignup }: SignupProps) {
                 <div className="text-center pt-4 border-t border-border">
                   <p className="text-sm text-muted-foreground">
                     Already have an account?{' '}
-                    <button 
+                    <button
                       onClick={() => navigate('/login')}
                       className="text-primary hover:underline font-medium"
                     >
@@ -139,7 +172,7 @@ export function Signup({ onSignup }: SignupProps) {
               {/* Right Column - Privacy Promises */}
               <div className="lg:border-l lg:border-border lg:pl-12">
                 <h3 className="text-xl font-medium mb-6 text-center lg:text-left">Our Privacy Promise To You</h3>
-                
+
                 <div className="space-y-8">
                   <div className="flex items-start space-x-4">
                     <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">

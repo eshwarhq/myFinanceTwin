@@ -1,6 +1,7 @@
 // src/routes/oneRoute.ts
 import express from 'express';
 import type { Request, Response } from 'express';
+import authUser from '../services/authUser';
 
 const router = express.Router();
 
@@ -17,5 +18,7 @@ router.get('/luffy', (_req: Request, res: Response) => {
     role: 'Future Pirate King',
   });
 });
+
+router.post('/signup', authUser.signUp)
 
 export default router;

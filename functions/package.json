@@ -3,6 +3,8 @@
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
     "build": "tsc",
+    "development": "cross-env NODE_ENV=development ts-node src/index.ts",
+    "production": "cross-env NODE_ENV=production node dist/index.js",
     "dev": "tsc --watch --outDir dist --preserveWatchOutput",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
@@ -19,6 +21,7 @@
     "compression": "^1.8.1",
     "connect-redis": "^9.0.0",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
     "express": "4.21.2",
     "express-rate-limit": "^8.0.1",
     "express-session": "^1.18.2",
@@ -39,11 +42,13 @@
     "@types/morgan": "^1.9.10",
     "@typescript-eslint/eslint-plugin": "^5.12.0",
     "@typescript-eslint/parser": "^5.12.0",
+    "cross-env": "^7.0.3",
     "eslint": "^8.9.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-import": "^2.25.4",
     "firebase-functions-test": "^3.1.0",
-    "typescript": "^5.7.3"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   },
   "private": true,
   "resolutions": {
