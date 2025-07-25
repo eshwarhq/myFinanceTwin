@@ -65,12 +65,23 @@ export function Homepage() {
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Animated Background Elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-20 left-10 w-16 h-16 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full animate-float opacity-40" style={{ animationDelay: '0s' }} />
-        <div className="absolute top-40 right-20 w-12 h-12 bg-gradient-to-br from-cyan-100 to-blue-100 rounded-full animate-float opacity-30" style={{ animationDelay: '2s' }} />
-        <div className="absolute bottom-40 left-20 w-20 h-20 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-full animate-float opacity-50" style={{ animationDelay: '4s' }} />
-        <div className="absolute bottom-20 right-10 w-8 h-8 bg-gradient-to-br from-cyan-100 to-blue-100 rounded-full animate-float opacity-35" style={{ animationDelay: '1s' }} />
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        {/* Layer 1: Soft flowing diagonal gradient */}
+        <div className="absolute top-0 left-0 w-[150%] h-[150%] bg-gradient-to-br from-blue-100 via-cyan-100 to-blue-200 transform -rotate-12 opacity-5 blur-2xl" />
+
+        {/* Layer 2: Abstract blob top-left */}
+        <div className="absolute top-20 left-10 w-96 h-96 bg-gradient-to-tr from-cyan-200 via-blue-100 to-cyan-100 transform rotate-45 scale-125 rounded-[60%] blur-[80px] opacity-20 animate-float" style={{ animationDelay: '2s' }} />
+
+        {/* Layer 3: Abstract blob bottom-right */}
+        <div className="absolute bottom-10 right-10 w-[30rem] h-[30rem] bg-gradient-to-br from-blue-100 via-cyan-100 to-blue-200 rounded-[50%] blur-[120px] opacity-15 animate-float" style={{ animationDelay: '4s' }} />
+
+        {/* Layer 4: Curved organic strip near center */}
+        <div className="absolute top-[35%] left-[25%] w-[50rem] h-[20rem] bg-gradient-to-r from-cyan-50 via-blue-100 to-cyan-200 skew-y-6 rounded-[30%] blur-[100px] opacity-10 animate-float" style={{ animationDelay: '1s' }} />
+
+        {/* Layer 5: Subtle background light wash */}
+        <div className="absolute inset-0 bg-gradient-radial from-blue-50 via-cyan-50 to-transparent opacity-10" />
       </div>
+
 
       {/* Navigation */}
       <nav className="sticky top-0 z-50 backdrop-blur-glass border-b border-border/50">
@@ -84,8 +95,18 @@ export function Homepage() {
             </div>
 
             <div className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="text-secondary-foreground hover:text-primary transition-colors">Features</a>
-              <a href="#security" className="text-secondary-foreground hover:text-primary transition-colors">Security</a>
+              <a href="#features"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const el = document.getElementById('features');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }} className="text-secondary-foreground hover:text-primary transition-colors">Features</a>
+              <a href="#security"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const el = document.getElementById('security');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }} className="text-secondary-foreground hover:text-primary transition-colors">Security</a>
               <Button
                 onClick={() => navigate('/login')}
                 className="gradient-accent hover:gradient-accent-hover text-white border-0 shadow-soft"
@@ -107,7 +128,7 @@ export function Homepage() {
       {/* Hero Section */}
       <section className="container mx-auto px-6 py-20 md:py-32">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="mb-6 max-w-3xl mx-auto text-2xl font-medium">
+          <h1 className="mb-6 max-w-3xl mx-auto text-5xl font-medium">
             AI That Understands Your Finances <br />
             Not Just Anyone's.
           </h1>
