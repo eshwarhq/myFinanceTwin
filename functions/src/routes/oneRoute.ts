@@ -20,7 +20,8 @@ router.get('/luffy', (_req: Request, res: Response) => {
   });
 });
 
-router.post('/signup', authUser.signUp)
-router.get('/streamChat', chatService.chat)
+router.post('/signup', authUser.signUp);
+router.post('/signIn', authUser.signIn);
+router.get('/streamChat', chatService.chat);
 
 export default router;

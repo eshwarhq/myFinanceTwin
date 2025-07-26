@@ -20,31 +20,23 @@ export function Login({ onLogin }: LoginProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return;
-
+    const userCred = await signInWithEmailAndPassword(auth, email, password);
+    const token = await userCred.user.getIdToken();
+    const userRecord = await fetch('http://localhost:5000/api/signIn', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken: token }),
+    });
+    const acData = await userRecord.json();
+    console.log("+++++++++++", acData.userData)
+    sessionStorage.setItem('username', acData?.userData?.name)
     setIsLoading(true);
-
-    try {
-      const res = await fetch('http://localhost:5000/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }), // 🚀 just creds
-      });
-
-      const data = await res.json();
-
-      if (res.ok && data.success) {
-        onLogin();
-        navigate('/dashboard'); // 🛫 party moves to dashboard
-      } else {
-        console.error('Login failed:', data.message || 'Unknown error');
-      }
-    } catch (err) {
-      console.error('Error:', err);
-    }
-
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
     setIsLoading(false);
+    onLogin();
+    navigate('/dashboard'); // 👈 moves to twin builder
   };
-
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">

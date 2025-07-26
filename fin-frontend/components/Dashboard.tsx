@@ -172,7 +172,9 @@ const trendingStocks = [
   { name: 'Microsoft Corp.', symbol: 'MSFT', change: '+2.1%', rationale: 'Cloud growth accelerating with new AI features' }
 ];
 
-export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete }: DashboardProps) {
+export function Dashboard({ isFirstTime = false, onOnboardingComplete }: DashboardProps) {
+  const userName = sessionStorage.getItem('username')
+  console.log("Dashboard: ", userName)
   const navigate = useNavigate();
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   const [chatInput, setChatInput] = useState('');
