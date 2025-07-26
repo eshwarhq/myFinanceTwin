@@ -2,6 +2,7 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import authUser from '../services/authUser';
+import chatService from '../services/chatService';
 
 const router = express.Router();
 
@@ -20,5 +21,6 @@ router.get('/luffy', (_req: Request, res: Response) => {
 });
 
 router.post('/signup', authUser.signUp)
+router.get('/streamChat', chatService.chat)
 
 export default router;

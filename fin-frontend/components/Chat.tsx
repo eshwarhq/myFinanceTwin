@@ -3,12 +3,12 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card, CardContent } from './ui/card';
 import { ScrollArea } from './ui/scroll-area';
-import { 
-  ArrowLeft, 
-  Mic, 
-  Send, 
-  User, 
-  Bot, 
+import {
+  ArrowLeft,
+  Mic,
+  Send,
+  User,
+  Bot,
   Sparkles,
   ChevronDown,
   ChevronUp
@@ -44,23 +44,56 @@ export function Chat({ userName }: ChatProps) {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const mockResponses = [
-    {
-      content: "Based on your spending patterns, I notice you've spent $456 on dining out this month, which is 35% above your usual average of $338. This represents about 12% of your monthly income.",
-      hasExplanation: true,
-      explanation: "I calculated this by analyzing your transaction history from the past 6 months. Your average monthly dining expenses were $338 ± $45. This month's $456 represents a $118 increase (35% above average). Relative to your $3,800 monthly income, this is 12% of your total earnings."
-    },
-    {
-      content: "Your emergency fund goal is progressing well! You currently have $8,500 saved toward your $15,000 target. At your current savings rate of approximately $400/month, you'll reach your goal in about 16 months.",
-      hasExplanation: true,
-      explanation: "Target: $15,000 | Current: $8,500 | Remaining: $6,500. Based on your last 3 months of savings deposits averaging $400/month: $6,500 ÷ $400 = 16.25 months to completion."
-    },
-    {
-      content: "Your investment portfolio has grown 8.4% this month, outperforming the S&P 500's 6.2% return. Your current allocation of 65% stocks, 25% bonds, and 10% cash aligns well with your moderate risk tolerance.",
-      hasExplanation: true,
-      explanation: "Portfolio value start of month: $39,100 | Current: $42,350 | Gain: $3,250 (8.4%). S&P 500 benchmark return: 6.2%. Your allocation percentages are calculated from total portfolio value: Stocks $27,528 (65%), Bonds $10,588 (25%), Cash $4,235 (10%)."
+  const fetchStream = async (messageId: string) => {
+    const response = await fetch('http://localhost:5000/api/streamChat',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+    const reader = response.body?.getReader();
+    const decoder = new TextDecoder();
+
+    if (reader) {
+      let streamed = '';
+      const newMessage: Message = {
+        id: messageId + '-ai',
+        type: 'ai',
+        content: '',
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, newMessage]);
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        streamed += decoder.decode(value);
+
+        setMessages(prev =>
+          prev.map(msg =>
+            msg.id === newMessage.id ? { ...msg, content: streamed } : msg
+          )
+        );
+      }
     }
-  ];
+  };
+
+  // const mockResponses = [
+  //   {
+  //     content: "Based on your spending patterns, I notice you've spent $456 on dining out this month, which is 35% above your usual average of $338. This represents about 12% of your monthly income.",
+  //     hasExplanation: true,
+  //     explanation: "I calculated this by analyzing your transaction history from the past 6 months. Your average monthly dining expenses were $338 ± $45. This month's $456 represents a $118 increase (35% above average). Relative to your $3,800 monthly income, this is 12% of your total earnings."
+  //   },
+  //   {
+  //     content: "Your emergency fund goal is progressing well! You currently have $8,500 saved toward your $15,000 target. At your current savings rate of approximately $400/month, you'll reach your goal in about 16 months.",
+  //     hasExplanation: true,
+  //     explanation: "Target: $15,000 | Current: $8,500 | Remaining: $6,500. Based on your last 3 months of savings deposits averaging $400/month: $6,500 ÷ $400 = 16.25 months to completion."
+  //   },
+  //   {
+  //     content: "Your investment portfolio has grown 8.4% this month, outperforming the S&P 500's 6.2% return. Your current allocation of 65% stocks, 25% bonds, and 10% cash aligns well with your moderate risk tolerance.",
+  //     hasExplanation: true,
+  //     explanation: "Portfolio value start of month: $39,100 | Current: $42,350 | Gain: $3,250 (8.4%). S&P 500 benchmark return: 6.2%. Your allocation percentages are calculated from total portfolio value: Stocks $27,528 (65%), Bonds $10,588 (25%), Cash $4,235 (10%)."
+  //   }
+  // ];
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -81,20 +114,9 @@ export function Chat({ userName }: ChatProps) {
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
 
-    // Simulate AI response
-    setTimeout(() => {
-      const randomResponse = mockResponses[Math.floor(Math.random() * mockResponses.length)];
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        type: 'ai',
-        content: randomResponse.content,
-        timestamp: new Date(),
-        hasExplanation: randomResponse.hasExplanation,
-        explanation: randomResponse.explanation,
-      };
-      setMessages(prev => [...prev, aiMessage]);
-    }, 1000);
+    fetchStream(userMessage.id); // <-- pass message ID for tracking
   };
+
 
   const handleVoiceInput = () => {
     if (isListening) {
@@ -103,7 +125,7 @@ export function Chat({ userName }: ChatProps) {
     }
 
     setIsListening(true);
-    
+
     // Simulate voice input
     setTimeout(() => {
       setInputValue("How much did I spend on groceries this month?");
@@ -129,8 +151,8 @@ export function Chat({ userName }: ChatProps) {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 size="sm"
                 onClick={() => navigate('/dashboard')}
               >
@@ -157,11 +179,10 @@ export function Chat({ userName }: ChatProps) {
               <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`flex items-start space-x-3 max-w-2xl ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
                   {/* Avatar */}
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                    message.type === 'user' 
-                      ? 'bg-muted' 
-                      : 'gradient-accent'
-                  }`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${message.type === 'user'
+                    ? 'bg-muted'
+                    : 'gradient-accent'
+                    }`}>
                     {message.type === 'user' ? (
                       <User className="w-4 h-4 text-muted-foreground" />
                     ) : (
@@ -170,13 +191,12 @@ export function Chat({ userName }: ChatProps) {
                   </div>
 
                   {/* Message Bubble */}
-                  <div className={`rounded-2xl px-4 py-3 ${
-                    message.type === 'user'
-                      ? 'bg-muted text-foreground'
-                      : 'bg-card border border-primary/20 text-foreground'
-                  }`}>
+                  <div className={`rounded-2xl px-4 py-3 ${message.type === 'user'
+                    ? 'bg-muted text-foreground'
+                    : 'bg-card border border-primary/20 text-foreground'
+                    }`}>
                     <p className="text-sm leading-relaxed">{message.content}</p>
-                    
+
                     {/* Explanation Button */}
                     {message.hasExplanation && (
                       <div className="mt-3">
@@ -191,7 +211,7 @@ export function Chat({ userName }: ChatProps) {
                             <ChevronDown className="w-3 h-3" />
                           )}
                         </button>
-                        
+
                         {/* Expanded Explanation */}
                         {expandedExplanations.has(message.id) && (
                           <div className="mt-3 p-3 bg-muted/50 rounded-lg border-l-2 border-primary">
@@ -202,7 +222,7 @@ export function Chat({ userName }: ChatProps) {
                         )}
                       </div>
                     )}
-                    
+
                     <div className="text-xs text-muted-foreground mt-2">
                       {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </div>
@@ -232,15 +252,14 @@ export function Chat({ userName }: ChatProps) {
                   }
                 }}
               />
-              
+
               {/* Voice Input Button */}
               <button
                 onClick={handleVoiceInput}
-                className={`absolute right-3 top-1/2 transform -translate-y-1/2 p-2 rounded-lg transition-all duration-300 ${
-                  isListening 
-                    ? 'bg-red-100 text-red-600' 
-                    : 'hover:bg-muted text-muted-foreground hover:text-primary'
-                }`}
+                className={`absolute right-3 top-1/2 transform -translate-y-1/2 p-2 rounded-lg transition-all duration-300 ${isListening
+                  ? 'bg-red-100 text-red-600'
+                  : 'hover:bg-muted text-muted-foreground hover:text-primary'
+                  }`}
               >
                 {isListening ? (
                   <div className="relative">
@@ -253,8 +272,8 @@ export function Chat({ userName }: ChatProps) {
                 )}
               </button>
             </div>
-            
-            <Button 
+
+            <Button
               onClick={handleSendMessage}
               disabled={!inputValue.trim()}
               className="gradient-accent hover:gradient-accent-hover text-white h-12 px-6"

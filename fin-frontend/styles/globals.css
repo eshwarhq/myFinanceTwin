@@ -147,7 +147,7 @@
     }
   
     p, span, li, label {
-      @apply text-gray-600;
+      @apply text-gray-700;
     }
   }
 

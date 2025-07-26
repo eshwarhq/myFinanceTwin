@@ -277,7 +277,7 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-10">
       {/* Coach Marks Overlay */}
       {showCoachMarks && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
@@ -348,24 +348,24 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
       )}
 
       {/* Dashboard Content */}                  {/* Header */}
-      <header className="bg-white mt-5">
+      <header className="bg-gray-10 mt-0">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-                <p className="text-gray-700 text-7xl text-muted-foreground">Hello, <span className="text-gray-600 text-6xl">{userName}</span></p>
+              <p className="text-gray-700 text-7xl text-muted-foreground">Hello, <span className="text-gray-600 text-6xl">{userName}</span></p>
             </div>
           </div>
         </div>
       </header>
-      {}
+      { }
 
-      <main className="container mx-auto px-6 py-2 pt-1">
+      <main className="container mx-auto px-6 py-24 pt-1">
         {!selectedCard ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Net Worth Trend Card */}
             <Card
               id="net-worth-card"
-              className="cursor-pointer hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02] col-span-1 md:col-span-2"
+              className="bg-green-100 cursor-pointer hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02] col-span-1 md:col-span-2"
               onClick={() => handleCardClick('networth')}
             >
               <CardHeader className="pb-4">
@@ -373,12 +373,12 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
                   <div>
                     <CardTitle className="flex items-center space-x-2">
                       <TrendingUp className="w-5 h-5 text-green-600" />
-                      <span>Net Worth Trend</span>
+                      <span className='text-black'>Net Worth Trend</span>
                       {isFirstTime && (
                         <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse ml-2" />
                       )}
                     </CardTitle>
-                    <CardDescription>Your financial progress over time</CardDescription>
+                    <CardDescription className='text-gray-500'>Your financial progress over time</CardDescription>
                   </div>
                   <div className="text-right">
                     <div className="text-2xl font-semibold text-green-600">
@@ -412,7 +412,7 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
 
             {/* Goals Progress Card */}
             <Card
-              className="cursor-pointer hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02]"
+              className="bg-black text-white cursor-pointer transition-all duration-300 hover:bg-zinc-900 hover:shadow-lg hover:scale-[1.02]"
               onClick={() => handleCardClick('goals')}
             >
               <CardHeader className="pb-4">
@@ -420,27 +420,33 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
                   <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
                     <Target className="w-5 h-5 text-blue-600" />
                   </div>
-                  <span>Goals Progress</span>
+                  <span className="text-white" >Goals Progress</span>
                 </CardTitle>
-                <CardDescription>Track your financial milestones</CardDescription>
+
+                {/* Make description white too */}
+                <CardDescription className="text-white mt-1">
+                  Track your financial milestones
+                </CardDescription>
               </CardHeader>
+
               <CardContent className="space-y-4">
                 {goals.slice(0, 2).map((goal, index) => (
                   <div key={index}>
                     <div className="flex justify-between text-sm mb-2">
-                      <span className="truncate">{goal.name}</span>
-                      <span className="text-muted-foreground">{goal.progress}%</span>
+                      <span className="text-white truncate">{goal.name}</span>
+                      <span className="text-white text-opacity-80">{goal.progress}%</span>
                     </div>
-                    <Progress value={goal.progress} className="h-2" />
+                    <Progress value={goal.progress} className="h-2 text-gray-100" />
                   </div>
                 ))}
-                <p className="text-xs text-muted-foreground mt-3">+1 more goal</p>
+                <p className="text-xs text-white text-opacity-50 mt-3">+1 more goal</p>
               </CardContent>
             </Card>
 
+
             {/* NEW: Loans & EMI Overview Card */}
             <Card
-              className="cursor-pointer hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02]"
+              className="bg-black cursor-pointer hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02]"
               onClick={() => handleCardClick('loans')}
             >
               <CardHeader className="pb-4">
@@ -448,24 +454,24 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
                   <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
                     <Building className="w-5 h-5 text-purple-600" />
                   </div>
-                  <span>Loans & EMIs</span>
+                  <span className='text-white'>Loans & EMIs</span>
                 </CardTitle>
-                <CardDescription>Your loan portfolio overview</CardDescription>
+                <CardDescription className='text-white'>Your loan portfolio overview</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
                   <div className="flex justify-between text-sm mb-2">
-                    <span>Total Outstanding</span>
-                    <span className="font-medium">{formatCurrency(totalLoanBalance)}</span>
+                    <span className='text-white'>Total Outstanding</span>
+                    <span className="text-gray-300 font-medium">{formatCurrency(totalLoanBalance)}</span>
                   </div>
                   <div className="flex justify-between text-sm mb-3">
-                    <span>Next EMI Due</span>
+                    <span className='text-white'>Next EMI Due</span>
                     <span className="text-orange-600">{formatDate(nextEmiDate)}</span>
                   </div>
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs">
-                      <span>Loans Repaid</span>
-                      <span>{Math.round(loanRepaidPercentage)}%</span>
+                      <span className='text-white'>Loans Repaid</span>
+                      <span className='text-white'>{Math.round(loanRepaidPercentage)}%</span>
                     </div>
                     <Progress value={loanRepaidPercentage} className="h-2" />
                   </div>
@@ -475,7 +481,7 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
 
             {/* NEW: Credit Card Usage Card */}
             <Card
-              className="cursor-pointer hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02]"
+              className="bg-black cursor-pointer hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02]"
               onClick={() => handleCardClick('credit')}
             >
               <CardHeader className="pb-4">
@@ -483,23 +489,23 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
                   <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
                     <CreditCard className="w-5 h-5 text-red-600" />
                   </div>
-                  <span>Credit Card Usage</span>
+                  <span className='text-white'>Credit Card Usage</span>
                 </CardTitle>
-                <CardDescription>Your credit utilization</CardDescription>
+                <CardDescription className='text-white mt-3'>Your credit utilization</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
                   <div className="flex justify-between text-sm mb-2">
-                    <span>Current Balance</span>
-                    <span className="font-medium">{formatCurrency(totalCreditBalance)}</span>
+                    <span className='text-white'>Current Balance</span>
+                    <span className="text-gray-300 font-medium">{formatCurrency(totalCreditBalance)}</span>
                   </div>
                   <div className="flex justify-between text-sm mb-3">
-                    <span>Payment Due</span>
+                    <span className='text-white'>Payment Due</span>
                     <span className="text-orange-600">{formatDate(nextCreditDue)}</span>
                   </div>
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs">
-                      <span>Credit Utilization</span>
+                      <span className='text-white'>Credit Utilization</span>
                       <span className={creditUtilization > 30 ? 'text-red-600' : 'text-green-600'}>
                         {Math.round(creditUtilization)}%
                       </span>
@@ -517,7 +523,7 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
 
             {/* NEW: Stocks & Investments Card */}
             <Card
-              className="cursor-pointer hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02]"
+              className="bg-black cursor-pointer hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02]"
               onClick={() => handleCardClick('investments')}
             >
               <CardHeader className="pb-4">
@@ -525,15 +531,15 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
                   <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center">
                     <BarChart3 className="w-5 h-5 text-indigo-600" />
                   </div>
-                  <span>Stocks & Investments</span>
+                  <span className='text-white'>Stocks & Investments</span>
                 </CardTitle>
-                <CardDescription>Your investment portfolio</CardDescription>
+                <CardDescription className='text-white'>Your investment portfolio</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   <div>
-                    <div className="text-2xl font-semibold">{formatCurrency(totalInvestmentValue)}</div>
-                    <div className="text-sm text-muted-foreground">Current Value</div>
+                    <div className="text-gray-300 text-2xl font-semibold">{formatCurrency(totalInvestmentValue)}</div>
+                    <div className="text-gray-300 text-sm text-muted-foreground">Current Value</div>
                   </div>
                   <div className={`flex items-center text-sm ${totalGainLoss >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                     {totalGainLoss >= 0 ? <ArrowUp className="w-3 h-3 mr-1" /> : <ArrowDown className="w-3 h-3 mr-1" />}
@@ -544,26 +550,26 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
             </Card>
 
             {/* Quick Stats */}
-            <Card className="hover:shadow-soft-lg transition-shadow">
+            <Card className="bg-black hover:shadow-soft-lg transition-shadow">
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center space-x-2">
                   <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
                     <DollarSign className="w-5 h-5 text-green-600" />
                   </div>
-                  <span>This Month</span>
+                  <span className='text-white'>This Month</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">Income</span>
-                  <span className="font-medium text-green-600">+₹4,200</span>
+                  <span className="text-white text-sm text-muted-foreground">Income</span>
+                  <span className="text-gray-300 font-medium text-green-600">+₹4,200</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">Expenses</span>
-                  <span className="font-medium">₹2,850</span>
+                  <span className="text-white text-sm text-muted-foreground">Expenses</span>
+                  <span className="text-gray-300 text-white font-medium">₹2,850</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">Savings</span>
+                  <span className="text-gray-300 text-sm text-muted-foreground">Savings</span>
                   <span className="font-medium text-blue-600">₹1,350</span>
                 </div>
               </CardContent>
@@ -572,7 +578,7 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
             {/* Recent Insights */}
             <Card
               id="insights-card"
-              className="cursor-pointer hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02]"
+              className="bg-black cursor-pointer hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02]"
               onClick={() => handleCardClick('spending')}
             >
               <CardHeader className="pb-4">
@@ -580,28 +586,28 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
                   <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
                     <AlertTriangle className="w-5 h-5 text-orange-600" />
                   </div>
-                  <span>Recent Insights</span>
+                  <span className='text-white'>Recent Insights</span>
                   {isFirstTime && (
                     <div className="w-2 h-2 bg-orange-600 rounded-full animate-pulse ml-2" />
                   )}
                 </CardTitle>
-                <CardDescription>AI-powered financial analysis</CardDescription>
+                <CardDescription className='text-white'>AI-powered financial analysis</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
+                  <div className="flex items-center justify-between p-3 bg-orange-50 rounded-3xl">
                     <div>
-                      <p className="text-sm font-medium">Dining Out Alert</p>
-                      <p className="text-xs text-muted-foreground">35% above average</p>
+                      <p className="text-gray-800 text-sm font-medium">Dining Out Alert</p>
+                      <p className="text-gray-800 text-xs text-muted-foreground">35% above average</p>
                     </div>
                     <div className="text-orange-600">
                       <ArrowUp className="w-4 h-4" />
                     </div>
                   </div>
-                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-3xl">
                     <div>
-                      <p className="text-sm font-medium">Great Savings</p>
-                      <p className="text-xs text-muted-foreground">12% below budget</p>
+                      <p className="text-gray-800 text-sm font-medium">Great Savings</p>
+                      <p className="text-gray-800 text-xs text-muted-foreground">12% below budget</p>
                     </div>
                     <div className="text-green-600">
                       <ArrowDown className="w-4 h-4" />
