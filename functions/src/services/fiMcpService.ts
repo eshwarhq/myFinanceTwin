@@ -8,6 +8,8 @@ export interface ToolCallPayload {
   [key: string]: any;
 }
 
+const allTools = ['fetch_net_worth', 'fetch_credit_report', 'fetch_epf_details', 'fetch_mf_transactions', 'fetch_bank_transactions', 'fetch_stock_transactions']
+
 export interface ToolCallResponse {
   result: any;
   [key: string]: any;
@@ -30,7 +32,6 @@ export async function callTool(
     }
   };
   console.log('**********', sessionId)
-
   const response: AxiosResponse<any> = await axios.post(url, body, {
     headers: {
       "Content-Type": "application/json",
@@ -38,8 +39,36 @@ export async function callTool(
     }
   });
 
-  console.log('**********', response?.data?.result?.content[0])
+  // console.log('**********', response?.data?.result?.content[0])
   return JSON.parse(response?.data?.result?.content[0]?.text);
+}
+
+
+export async function callAllTools(
+  args: object = {},
+  sessionId: string
+): Promise<Record<string, any>> {
+  try {
+    const toolPromises = allTools.map((tool) => {
+      console.log("toolname: ", tool);
+      return callTool(tool, args, sessionId).then((res) => ({
+        tool,
+        result: res,
+      }));
+    });
+
+    const resolvedResults = await Promise.all(toolPromises);
+
+    const totalResponse: Record<string, any> = {};
+    for (const { tool, result } of resolvedResults) {
+      totalResponse[tool] = result;
+    }
+
+    return totalResponse;
+  } catch (error) {
+    console.error("Error in callAllTools:", error);
+    return {};
+  }
 }
 
 // // Add more functions for other endpoints as needed

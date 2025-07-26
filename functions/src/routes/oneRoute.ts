@@ -25,7 +25,21 @@ router.get('/luffy', (_req: Request, res: Response) => {
 router.post('/fi-mcp/:toolName', async (req, res) => {
   try {
     const JsonData = await fiMcpService.callTool(req.params.toolName, req.body, req.headers['mcp-session-id']);
-    res.json({data: JsonData});
+    res.json({ data: JsonData });
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(500).json({ error: err.message });
+    } else {
+      res.status(500).json({ error: 'An unknown error occurred.' });
+    }
+  }
+});
+
+router.post('/fi-mcp-all/allTools', async (req, res) => {
+  try {
+    console.log('Hello world')
+    const JsonData = await fiMcpService.callAllTools(req.body, req.headers['mcp-session-id'] as string);
+    res.json({ data: JsonData });
   } catch (err) {
     if (err instanceof Error) {
       res.status(500).json({ error: err.message });

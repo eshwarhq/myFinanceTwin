@@ -34,6 +34,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Chat } from './Chat';
+import { mapDataToCards } from './mapToCards';
 
 interface DashboardProps {
   userName: string;
@@ -207,6 +208,10 @@ export function Dashboard({ isFirstTime = false, onOnboardingComplete }: Dashboa
 
   // Animate net worth value on first load
   useEffect(() => {
+    (async () => {
+      await mapDataToCards(); // Async function handled safely here
+    })();
+
     if (isAnimatingValue) {
       const targetValue = 54500;
       const duration = 2000;
