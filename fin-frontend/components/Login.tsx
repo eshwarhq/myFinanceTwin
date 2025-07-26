@@ -1,11 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from './ui/card';
 import { ArrowLeft, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+
 interface LoginProps {
   onLogin: () => void;
 }
@@ -17,39 +24,53 @@ export function Login({ onLogin }: LoginProps) {
   const [mobileNumber, setMobileNumber] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return;
-    const userCred = await signInWithEmailAndPassword(auth, email, password);
-    const token = await userCred.user.getIdToken();
-    const userRecord = await fetch('http://localhost:5000/api/signIn', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idToken: token }),
-    });
-    const acData = await userRecord.json();
-    console.log("+++++++++++", acData.userData)
-    sessionStorage.setItem('username', acData?.userData?.name)
-    const fiRecord = await fetch('http://localhost:5000/api/fi-mcp/fetch_net_worth', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Mcp-session-Id': `mcp-session-${acData?.uid}` },
-      body: JSON.stringify({ idToken: token }),
-    });
-    console.log(fiRecord);
-    
-    setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsLoading(false);
-    onLogin();
-    navigate('/dashboard'); // 👈 moves to twin builder
+    try {
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      const token = await userCred.user.getIdToken();
+      const userRecord = await fetch('http://localhost:5000/api/signIn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken: token }),
+      });
+      const acData = await userRecord.json();
+      sessionStorage.setItem('username', acData?.userData?.name);
+
+      await fetch('http://localhost:5000/api/fi-mcp/fetch_net_worth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Mcp-session-Id': `mcp-session-${acData?.uid}`,
+        },
+        body: JSON.stringify({ idToken: token }),
+      });
+
+      setIsLoading(true);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setIsLoading(false);
+      onLogin();
+      navigate(isMobile ? '/dashboard1' : '/dashboard');
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
   };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {/* Back Button */}
         <Button
           variant="ghost"
           onClick={() => navigate('/')}
@@ -59,7 +80,6 @@ export function Login({ onLogin }: LoginProps) {
           Back to Home
         </Button>
 
-        {/* Login Card */}
         <Card className="shadow-soft-lg border-border/50">
           <CardHeader className="text-center pb-8">
             <div className="w-12 h-12 gradient-accent rounded-xl flex items-center justify-center mx-auto mb-4">
@@ -92,7 +112,7 @@ export function Login({ onLogin }: LoginProps) {
                   type="text"
                   value={mobileNumber}
                   onChange={(e) => setMobileNumber(e.target.value)}
-                  placeholder="Enter your email"
+                  placeholder="Enter your number"
                   required
                   className="h-12 border-border focus:border-primary transition-colors"
                 />
