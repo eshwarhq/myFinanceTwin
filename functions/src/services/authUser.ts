@@ -1,12 +1,17 @@
 import { Request, Response } from 'express';
 import { db, auth } from '../connections/databaseConnection';
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
+
+const generateUUID = (): string => {
+  return uuidv4();
+};
 
 const signUp = async (req: Request, res: Response) => {
-  const { name, email, password, agreedToTerms, mobileNumber } = req.body;
+  const { name, email, password, mobileNumber, agreedToTerms } = req.body;
   const redis = req.redisClient;
 
-  if (!name || !email || !password || !agreedToTerms) {
+  if (!name || !email || !password || !mobileNumber || !agreedToTerms) {
     return res.status(400).json({ success: false, message: 'Missing credentials' });
   }
 
@@ -54,11 +59,13 @@ const signIn = async (req: Request, res: Response) => {
     const decoded = await auth.verifyIdToken(idToken);
     const userData = await db.collection('users').doc(decoded.uid).get();
 
-    await mcpLoginHelper(userData.data()?.uid,userData.data()?.mobileNumber );
+    console.log('userData: ', userData)
+    const uuid = generateUUID();
+    await mcpLoginHelper(`mcp-session-${uuid}`, userData.data()?.mobileNumber);
 
     return res.status(200).json({
       success: true,
-      uid: decoded.uid,
+      uid: uuid,
       email: decoded.email,
       userData: userData.data(),
     });
@@ -71,8 +78,12 @@ const signIn = async (req: Request, res: Response) => {
 
 
 export async function mcpLoginHelper(uid: string, phoneNumber: string, otp: string = '1234') {
-  const MCP_BASE_URL = 'http://localhost:8080';
+  const MCP_BASE_URL = 'http://34.46.24.70:8080';
+  console.log('Mcp', uid, phoneNumber, otp)
+
   const sessionId = uid.startsWith('mcp-session-') ? uid : `mcp-session-${uid}`;
+
+  console.log('+++++++++++', sessionId)
   try {
     const response = await axios.post(
       `${MCP_BASE_URL}/login`,
@@ -83,6 +94,8 @@ export async function mcpLoginHelper(uid: string, phoneNumber: string, otp: stri
         },
       }
     );
+
+    console.log("Login time: ", sessionId)
     if (response.status === 200) {
       return { success: true, sessionId };
     } else {

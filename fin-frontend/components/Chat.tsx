@@ -146,33 +146,8 @@ export function Chat({ userName }: ChatProps) {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <header className="bg-card border-b border-border shadow-soft sticky top-0 z-40">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('/dashboard')}
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Dashboard
-              </Button>
-              <div className="w-8 h-8 gradient-accent rounded-lg flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-medium">Financial AI Chat</h1>
-                <p className="text-sm text-muted-foreground">Your intelligent financial co-pilot</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
       {/* Chat Messages */}
-      <div className="flex-1 container mx-auto px-6 py-6">
+      <div className="flex-1 ml-0 mr-3 px-0 py-6">
         <ScrollArea className="h-[calc(100vh-200px)]" ref={scrollAreaRef}>
           <div className="space-y-6 pb-6">
             {messages.map((message) => (
@@ -214,7 +189,7 @@ export function Chat({ userName }: ChatProps) {
 
                         {/* Expanded Explanation */}
                         {expandedExplanations.has(message.id) && (
-                          <div className="mt-3 p-3 bg-muted/50 rounded-lg border-l-2 border-primary">
+                          <div className="mt-3 p-3 bg-muted/50 rounded-3xl border-l-2 border-primary">
                             <p className="text-xs text-muted-foreground leading-relaxed">
                               {message.explanation}
                             </p>
@@ -256,7 +231,7 @@ export function Chat({ userName }: ChatProps) {
               {/* Voice Input Button */}
               <button
                 onClick={handleVoiceInput}
-                className={`absolute right-3 top-1/2 transform -translate-y-1/2 p-2 rounded-lg transition-all duration-300 ${isListening
+                className={`absolute right-3 top-1/2 transform -translate-y-1/2 p-2 rounded-full transition-all duration-300 ${isListening
                   ? 'bg-red-100 text-red-600'
                   : 'hover:bg-muted text-muted-foreground hover:text-primary'
                   }`}
