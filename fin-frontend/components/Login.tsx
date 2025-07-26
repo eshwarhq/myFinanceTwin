@@ -30,12 +30,14 @@ export function Login({ onLogin }: LoginProps) {
     });
     const acData = await userRecord.json();
     console.log("+++++++++++", acData.userData)
-    sessionStorage.setItem('username', acData?.uid)
+    sessionStorage.setItem('username', acData?.userData?.name)
     const fiRecord = await fetch('http://localhost:5000/api/fi-mcp/fetch_net_worth', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Mcp-session-Id': `mcp-session-${acData?.uid}` },
       body: JSON.stringify({ idToken: token }),
     });
+    console.log(fiRecord);
+    
     setIsLoading(true);
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));

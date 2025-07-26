@@ -1,7 +1,7 @@
 // myFinanceTwin/functions/src/services/fiMcpService.ts
 import axios, { AxiosResponse } from 'axios';
 
-const FI_MCP_BASE_URL = 'http://localhost:8080'; // Replace with actual port
+// const FI_MCP_BASE_URL = 'http://localhost:8080'; // Replace with actual port
 
 // Define types for tool call
 export interface ToolCallPayload {
@@ -19,7 +19,7 @@ export async function callTool(
   args: object = {},
   sessionId: any,
 ): Promise<any> {
-  const url = `${FI_MCP_BASE_URL}/mcp/stream`;
+  const url = `http://34.46.24.70:8080/mcp/stream`;
   const body = {
     jsonrpc: "2.0",
     id: `${toolName}-${Date.now()}`,
@@ -29,12 +29,16 @@ export async function callTool(
       arguments: args
     }
   };
+  console.log('**********', sessionId)
+
   const response: AxiosResponse<any> = await axios.post(url, body, {
     headers: {
       "Content-Type": "application/json",
       "Mcp-Session-Id": sessionId
     }
   });
+
+  console.log('**********', response)
   return response.data;
 }
 

@@ -1,6 +1,11 @@
 import { Request, Response } from 'express';
 import { db, auth } from '../connections/databaseConnection';
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
+
+const generateUUID = (): string => {
+  return uuidv4();
+};
 
 const signUp = async (req: Request, res: Response) => {
   const { name, email, password, mobileNumber, agreedToTerms } = req.body;
@@ -60,7 +65,7 @@ const signIn = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       success: true,
-      uid: decoded.uid,
+      uid: generateUUID(),
       email: decoded.email,
       userData: userData.data(),
     });
@@ -73,7 +78,7 @@ const signIn = async (req: Request, res: Response) => {
 
 
 export async function mcpLoginHelper(uid: string, phoneNumber: string, otp: string = '1234') {
-  const MCP_BASE_URL = 'http://localhost:8080';
+  const MCP_BASE_URL = 'http://34.46.24.70:8080';
   console.log('Mcp', uid, phoneNumber, otp)
 
   const sessionId = uid.startsWith('mcp-session-') ? uid : `mcp-session-${uid}`;
