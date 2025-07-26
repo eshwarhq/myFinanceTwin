@@ -22,7 +22,6 @@ const signUp = async (req: Request, res: Response) => {
       email,
       mobileNumber,
       agreedToTerms,
-      mobileNumber,
       createdAt: new Date().toISOString(),
     });
 
@@ -47,6 +46,7 @@ const signUp = async (req: Request, res: Response) => {
 const signIn = async (req: Request, res: Response) => {
   const { idToken } = req.body;
 
+  console.log('================',idToken)
   if (!idToken) {
     return res.status(401).json({ success: false, message: 'Missing ID Token' });
   }
@@ -55,7 +55,8 @@ const signIn = async (req: Request, res: Response) => {
     const decoded = await auth.verifyIdToken(idToken);
     const userData = await db.collection('users').doc(decoded.uid).get();
 
-    await mcpLoginHelper(userData.data()?.uid,userData.data()?.mobileNumber );
+    console.log('userData: ', userData)
+    await mcpLoginHelper(decoded.uid,userData.data()?.mobileNumber );
 
     return res.status(200).json({
       success: true,
@@ -73,7 +74,11 @@ const signIn = async (req: Request, res: Response) => {
 
 export async function mcpLoginHelper(uid: string, phoneNumber: string, otp: string = '1234') {
   const MCP_BASE_URL = 'http://localhost:8080';
+  console.log('Mcp', uid, phoneNumber, otp)
+
   const sessionId = uid.startsWith('mcp-session-') ? uid : `mcp-session-${uid}`;
+
+  console.log('+++++++++++', sessionId)
   try {
     const response = await axios.post(
       `${MCP_BASE_URL}/login`,
