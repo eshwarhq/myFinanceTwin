@@ -38,8 +38,8 @@ export async function callTool(
     }
   });
 
-  console.log('**********', response)
-  return response.data;
+  console.log('**********', response?.data?.result?.content[0])
+  return JSON.parse(response?.data?.result?.content[0]?.text);
 }
 
 // // Add more functions for other endpoints as needed

@@ -24,8 +24,8 @@ router.get('/luffy', (_req: Request, res: Response) => {
 
 router.post('/fi-mcp/:toolName', async (req, res) => {
   try {
-    const data = await fiMcpService.callTool(req.params.toolName, req.body, req.headers['mcp-session-id']);
-    res.json(data);
+    const JsonData = await fiMcpService.callTool(req.params.toolName, req.body, req.headers['mcp-session-id']);
+    res.json({data: JsonData});
   } catch (err) {
     if (err instanceof Error) {
       res.status(500).json({ error: err.message });

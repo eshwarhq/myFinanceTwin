@@ -51,7 +51,6 @@ const signUp = async (req: Request, res: Response) => {
 const signIn = async (req: Request, res: Response) => {
   const { idToken } = req.body;
 
-  console.log('================',idToken)
   if (!idToken) {
     return res.status(401).json({ success: false, message: 'Missing ID Token' });
   }
@@ -61,11 +60,12 @@ const signIn = async (req: Request, res: Response) => {
     const userData = await db.collection('users').doc(decoded.uid).get();
 
     console.log('userData: ', userData)
-    await mcpLoginHelper(decoded.uid,userData.data()?.mobileNumber );
+    const uuid = generateUUID();
+    await mcpLoginHelper(`mcp-session-${uuid}`, userData.data()?.mobileNumber);
 
     return res.status(200).json({
       success: true,
-      uid: generateUUID(),
+      uid: uuid,
       email: decoded.email,
       userData: userData.data(),
     });
@@ -94,6 +94,8 @@ export async function mcpLoginHelper(uid: string, phoneNumber: string, otp: stri
         },
       }
     );
+
+    console.log("Login time: ", sessionId)
     if (response.status === 200) {
       return { success: true, sessionId };
     } else {
