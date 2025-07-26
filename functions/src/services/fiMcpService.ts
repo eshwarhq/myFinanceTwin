@@ -17,12 +17,12 @@ export interface ToolCallResponse {
 export async function callTool(
   toolName: string,
   args: object = {},
-  sessionId: string
+  sessionId: any,
 ): Promise<any> {
   const url = `${FI_MCP_BASE_URL}/mcp/stream`;
   const body = {
     jsonrpc: "2.0",
-    id: 1,
+    id: `${toolName}-${Date.now()}`,
     method: "tools/call",
     params: {
       name: toolName,
@@ -38,11 +38,11 @@ export async function callTool(
   return response.data;
 }
 
-// Add more functions for other endpoints as needed
-export async function streamData(): Promise<any> {
-  const url = `${FI_MCP_BASE_URL}/stream`;
-  const response: AxiosResponse<any> = await axios.get(url);
-  return response.data;
-}
+// // Add more functions for other endpoints as needed
+// export async function streamData(): Promise<any> {
+//   const url = `${FI_MCP_BASE_URL}/stream`;
+//   const response: AxiosResponse<any> = await axios.get(url);
+//   return response.data;
+// }
 
 // ...add more as needed
