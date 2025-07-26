@@ -1,66 +1,65 @@
-import { Request, Response } from "express"
-// import { getAuth } from "firebase-admin/auth";
-import { db } from "../connections/databaseConnection";
+import { Request, Response } from 'express';
+import { db, auth } from '../connections/databaseConnection';
 
 const signUp = async (req: Request, res: Response) => {
-    try {
-        const {
-            name,
-            email,
-            password,
-            agreedToTerms
-        } = req.body;
-        console.log(req.body)
-        const redis = req.redisClient;
-        if (!name || !email || !password || !agreedToTerms) {
-            return res.json({
-                success: false,
-                message: "Missing credentials"
-            })
-        }
+  const { name, email, password, agreedToTerms } = req.body;
+  const redis = req.redisClient;
 
-        const uid = '123456'
+  if (!name || !email || !password || !agreedToTerms) {
+    return res.status(400).json({ success: false, message: 'Missing credentials' });
+  }
 
-        // const user = await getAuth().createUser({
-        //     email,
-        //     password,
-        //     displayName: name
-        // });
-        try {
-            await db.collection('users').doc(uid).set({
-                email,
-                agreedToTerms,
-                createdAt: Date.now(),
-            });
-        } catch (err) {
-            console.error("❌ Firestore write failed:", err);
-        }
+  try {
+    const userRecord = await auth.createUser({
+      email,
+      password,
+      displayName: name,
+    });
 
-        await redis?.set(uid, JSON.stringify(req.body), 'EX', 60 * 60); // 1 hour expiry
-        const sessionData = await redis?.get(uid);
+    await db.collection('users').doc(userRecord.uid).set({
+      name,
+      email,
+      agreedToTerms,
+      createdAt: new Date().toISOString(),
+    });
 
-        console.log('Retrieval: ', sessionData)
-        // Set cookie in browser
-        res.cookie('session_id', uid, {
-            httpOnly: true,
-            maxAge: 60 * 60 * 1000, // 1 hour
-            sameSite: 'lax',
-            secure: false, // change to true on HTTPS
-        });
+    await redis?.set(userRecord.uid, JSON.stringify(req.body), 'EX', 60 * 60);
 
-        return res.status(200).json({
-            uid: '12345'
-        })
+    res.cookie('session_id', userRecord.uid, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 1000,
+      sameSite: 'lax',
+      secure: false, // switch to true on HTTPS
+    });
 
-    } catch (error) {
-        console.error(error)
-        return res.json({
-            success: false,
-            error: error
-        })
-    }
-}
+    return res.status(200).json({ success: true, uid: userRecord.uid });
+  } catch (error: any) {
+    console.error('Signup error:', error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
 
-export default {
-    signUp
-}
+const signIn = async (req: Request, res: Response) => {
+  const { idToken } = req.body;
+
+  if (!idToken) {
+    return res.status(401).json({ success: false, message: 'Missing ID Token' });
+  }
+
+  try {
+    const decoded = await auth.verifyIdToken(idToken);
+    const userData = await db.collection('users').doc(decoded.uid).get();
+
+    return res.status(200).json({
+      success: true,
+      uid: decoded.uid,
+      email: decoded.email,
+      userData: userData.data(),
+    });
+  } catch (error) {
+    console.error('Login verification failed:', error);
+    return res.status(401).json({ success: false, message: 'Invalid token' });
+  }
+};
+
+export default { signUp, signIn };

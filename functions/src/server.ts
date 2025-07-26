@@ -9,6 +9,7 @@ import { rateLimit } from 'express-rate-limit';
 import oneRoute from './routes/oneRoute';
 import redisMiddleware from './middlewares/redisMiddleware';
 import RedisConnection from './connections/redisConnection';
+// import { verifyAuth } from './middlewares/authMiddleware';
 
 const app = express();
 
@@ -57,6 +58,7 @@ app.get('/health/redis', async (req, res) => {
   res.send({ status: pong });
 });
 
+// app.use(verifyAuth)
 app.use(redisMiddleware)
 
 // ✅ Modular Routes Mounting

@@ -5,12 +5,13 @@ import { Label } from './ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { ArrowLeft, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 interface LoginProps {
   onLogin: () => void;
 }
 
-
 export function Login({ onLogin }: LoginProps) {
+  const auth = getAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,21 +20,38 @@ export function Login({ onLogin }: LoginProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return;
-    
+
     setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    try {
+      const res = await fetch('http://localhost:5000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }), // 🚀 just creds
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        onLogin();
+        navigate('/dashboard'); // 🛫 party moves to dashboard
+      } else {
+        console.error('Login failed:', data.message || 'Unknown error');
+      }
+    } catch (err) {
+      console.error('Error:', err);
+    }
+
     setIsLoading(false);
-    onLogin();
-    navigate('/dashboard'); // 👈 moves to twin builder
   };
+
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Back Button */}
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           onClick={() => navigate('/')}
           className="mb-6 -ml-2"
         >
@@ -66,7 +84,7 @@ export function Login({ onLogin }: LoginProps) {
                   className="h-12 border-border focus:border-primary transition-colors"
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
                 <Input
@@ -80,7 +98,7 @@ export function Login({ onLogin }: LoginProps) {
                 />
               </div>
 
-              <Button 
+              <Button
                 type="submit"
                 disabled={isLoading}
                 className="w-full h-12 gradient-accent hover:gradient-accent-hover text-white border-0 shadow-soft mt-6"
@@ -92,7 +110,7 @@ export function Login({ onLogin }: LoginProps) {
             <div className="text-center pt-4 border-t border-border">
               <p className="text-sm text-muted-foreground">
                 Don't have an account?{' '}
-                <button 
+                <button
                   onClick={() => navigate('/signup')}
                   className="text-primary hover:underline font-medium"
                 >
