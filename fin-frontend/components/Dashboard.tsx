@@ -348,40 +348,18 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
       )}
 
       {/* Dashboard Content */}                  {/* Header */}
-      <header className="bg-white border-b border-border shadow-soft sticky top-0 z-40">
+      <header className="bg-white mt-5">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="w-8 h-8 gradient-accent rounded-lg flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-medium">Financial Health Dashboard</h1>
-                <p className="text-sm text-muted-foreground">Welcome back, {userName}</p>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('/chat')}
-              >
-                <MessageCircle className="w-4 h-4 mr-2" />
-                Chat
-              </Button>
-              <Button variant="ghost" size="sm">
-                <Settings className="w-4 h-4" />
-              </Button>
-              <Button variant="ghost" size="sm">
-                <User className="w-4 h-4" />
-              </Button>
+            <div>
+                <p className="text-gray-700 text-7xl text-muted-foreground">Hello, <span className="text-gray-600 text-6xl">{userName}</span></p>
             </div>
           </div>
         </div>
       </header>
+      {}
 
-      <main className="container mx-auto px-6 py-4 pt-16">
+      <main className="container mx-auto px-6 py-2 pt-1">
         {!selectedCard ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Net Worth Trend Card */}
@@ -439,7 +417,9 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
             >
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center space-x-2">
-                  <Target className="w-5 h-5 text-blue-600" />
+                  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                    <Target className="w-5 h-5 text-blue-600" />
+                  </div>
                   <span>Goals Progress</span>
                 </CardTitle>
                 <CardDescription>Track your financial milestones</CardDescription>
@@ -465,7 +445,9 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
             >
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center space-x-2">
-                  <Building className="w-5 h-5 text-purple-600" />
+                  <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
+                    <Building className="w-5 h-5 text-purple-600" />
+                  </div>
                   <span>Loans & EMIs</span>
                 </CardTitle>
                 <CardDescription>Your loan portfolio overview</CardDescription>
@@ -498,7 +480,9 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
             >
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center space-x-2">
-                  <CreditCard className="w-5 h-5 text-red-600" />
+                  <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                    <CreditCard className="w-5 h-5 text-red-600" />
+                  </div>
                   <span>Credit Card Usage</span>
                 </CardTitle>
                 <CardDescription>Your credit utilization</CardDescription>
@@ -538,7 +522,9 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
             >
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center space-x-2">
-                  <BarChart3 className="w-5 h-5 text-indigo-600" />
+                  <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center">
+                    <BarChart3 className="w-5 h-5 text-indigo-600" />
+                  </div>
                   <span>Stocks & Investments</span>
                 </CardTitle>
                 <CardDescription>Your investment portfolio</CardDescription>
@@ -561,7 +547,9 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
             <Card className="hover:shadow-soft-lg transition-shadow">
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center space-x-2">
-                  <DollarSign className="w-5 h-5 text-green-600" />
+                  <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                    <DollarSign className="w-5 h-5 text-green-600" />
+                  </div>
                   <span>This Month</span>
                 </CardTitle>
               </CardHeader>
@@ -589,7 +577,9 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
             >
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center space-x-2">
-                  <AlertTriangle className="w-5 h-5 text-orange-600" />
+                  <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
+                    <AlertTriangle className="w-5 h-5 text-orange-600" />
+                  </div>
                   <span>Recent Insights</span>
                   {isFirstTime && (
                     <div className="w-2 h-2 bg-orange-600 rounded-full animate-pulse ml-2" />
@@ -1010,7 +1000,7 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
           </div>
         )}
         {/* Header */}
-        <footer className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/40 backdrop-blur-md border border-border shadow-xl rounded-2xl px-6 py-3 flex items-center space-x-4">
+        <footer className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/40 backdrop-blur-md border border-border shadow-xl rounded-2xl px-6 py-3 flex items-center space-x-80">
           <div className="flex items-center space-x-2">
             {/* <div className="w-8 h-8 gradient-accent rounded-lg flex items-center justify-center">
               <Sparkles className="w-5 h-5 text-white" />
@@ -1021,9 +1011,6 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
           <div className="flex items-center space-x-3 ml-4">
             <Button variant="ghost" size="icon" onClick={() => navigate('/chat')}>
               <MessageCircle className="w-5 h-5" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <Settings className="w-5 h-5" />
             </Button>
             <Button variant="ghost" size="icon">
               <User className="w-5 h-5" />
