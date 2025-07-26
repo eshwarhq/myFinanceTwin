@@ -18,6 +18,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "@types/ioredis": "^4.28.10",
+    "axios": "^1.11.0",
     "compression": "^1.8.1",
     "connect-redis": "^9.0.0",
     "cors": "^2.8.5",

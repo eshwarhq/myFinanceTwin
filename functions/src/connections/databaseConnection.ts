@@ -2,10 +2,11 @@
 import * as admin from 'firebase-admin';
 import * as dotenv from 'dotenv';
 import path from 'path';
+// import { Certificate } from 'crypto';
 
 dotenv.config();
 
-const serviceAccountPath = process.env.GOOGLE_APPLICATION_CREDENTIALS || '../../certificate.json';
+const serviceAccountPath = process.env.GOOGLE_APPLICATION_CREDENTIALS || `certificate.json`;
 
 if (!admin.apps.length) {
   admin.initializeApp({
