@@ -5,7 +5,7 @@ import path from 'path';
 
 dotenv.config();
 
-const serviceAccountPath = process.env.GOOGLE_APPLICATION_CREDENTIALS || '../my-finance-demo-firebase-adminsdk-fbsvc-6ba1da7c0d.json';
+const serviceAccountPath = process.env.GOOGLE_APPLICATION_CREDENTIALS || '../../certificate.json';
 
 if (!admin.apps.length) {
   admin.initializeApp({

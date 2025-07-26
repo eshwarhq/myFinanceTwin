@@ -4,12 +4,12 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Progress } from './ui/progress';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
-import { 
-  TrendingUp, 
-  Target, 
-  AlertTriangle, 
-  MessageCircle, 
-  User, 
+import {
+  TrendingUp,
+  Target,
+  AlertTriangle,
+  MessageCircle,
+  User,
   Settings,
   Sparkles,
   Calendar,
@@ -214,12 +214,12 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
       const timer = setInterval(() => {
         currentStep++;
         setNetWorthValue(Math.round(stepValue * currentStep));
-        
+
         if (currentStep >= steps) {
           clearInterval(timer);
           setNetWorthValue(targetValue);
           setIsAnimatingValue(false);
-          
+
           if (isFirstTime) {
             setTimeout(() => setShowWelcomeBanner(true), 500);
           }
@@ -247,7 +247,7 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
 
   const handleCoachMarkComplete = (coachMarkId: string) => {
     setCompletedCoachMarks(prev => [...prev, coachMarkId]);
-    
+
     if (completedCoachMarks.length + 1 >= coachMarks.length) {
       setTimeout(() => {
         setShowCoachMarks(false);
@@ -291,15 +291,14 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
                 Let's take a quick tour of your personalized financial insights.
               </p>
             </div>
-            
+
             <div className="space-y-4">
               {coachMarks.map((mark) => {
                 const isCompleted = completedCoachMarks.includes(mark.id);
                 return (
                   <div key={mark.id} className="flex items-start space-x-3">
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                      isCompleted ? 'bg-green-600' : 'border-2 border-border'
-                    }`}>
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${isCompleted ? 'bg-green-600' : 'border-2 border-border'
+                      }`}>
                       {isCompleted && <CheckCircle className="w-4 h-4 text-white" />}
                     </div>
                     <div>
@@ -310,8 +309,8 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
                 );
               })}
             </div>
-            
-            <Button 
+
+            <Button
               onClick={() => setShowCoachMarks(false)}
               className="w-full mt-6 gradient-accent hover:gradient-accent-hover text-white"
             >
@@ -321,7 +320,34 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
         </div>
       )}
 
-      {/* Header */}
+      {/* Welcome Banner */}
+      {showWelcomeBanner && (
+        <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-b border-blue-200">
+          <div className="container mx-auto px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <Sparkles className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <p className="font-medium text-blue-900">Your Financial Twin is ready!</p>
+                  <p className="text-sm text-blue-700">Ask a question or explore your dashboard to get started.</p>
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleWelcomeBannerClose}
+                className="text-blue-700 hover:text-blue-900"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Dashboard Content */}                  {/* Header */}
       <header className="bg-white border-b border-border shadow-soft sticky top-0 z-40">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
@@ -334,10 +360,10 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
                 <p className="text-sm text-muted-foreground">Welcome back, {userName}</p>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-4">
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 size="sm"
                 onClick={() => navigate('/chat')}
               >
@@ -355,39 +381,11 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
         </div>
       </header>
 
-      {/* Welcome Banner */}
-      {showWelcomeBanner && (
-        <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-b border-blue-200">
-          <div className="container mx-auto px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 text-white" />
-                </div>
-                <div>
-                  <p className="font-medium text-blue-900">Your Financial Twin is ready!</p>
-                  <p className="text-sm text-blue-700">Ask a question or explore your dashboard to get started.</p>
-                </div>
-              </div>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={handleWelcomeBannerClose}
-                className="text-blue-700 hover:text-blue-900"
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Dashboard Content */}
       <main className="container mx-auto px-6 py-4 pt-16">
         {!selectedCard ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Net Worth Trend Card */}
-            <Card 
+            <Card
               id="net-worth-card"
               className="cursor-pointer hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02] col-span-1 md:col-span-2"
               onClick={() => handleCardClick('networth')}
@@ -421,10 +419,10 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
                     <LineChart data={netWorthData}>
                       <XAxis dataKey="month" axisLine={false} tickLine={false} />
                       <YAxis hide />
-                      <Line 
-                        type="monotone" 
-                        dataKey="value" 
-                        stroke="#10b981" 
+                      <Line
+                        type="monotone"
+                        dataKey="value"
+                        stroke="#10b981"
                         strokeWidth={3}
                         dot={false}
                       />
@@ -435,7 +433,7 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
             </Card>
 
             {/* Goals Progress Card */}
-            <Card 
+            <Card
               className="cursor-pointer hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02]"
               onClick={() => handleCardClick('goals')}
             >
@@ -461,7 +459,7 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
             </Card>
 
             {/* NEW: Loans & EMI Overview Card */}
-            <Card 
+            <Card
               className="cursor-pointer hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02]"
               onClick={() => handleCardClick('loans')}
             >
@@ -494,7 +492,7 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
             </Card>
 
             {/* NEW: Credit Card Usage Card */}
-            <Card 
+            <Card
               className="cursor-pointer hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02]"
               onClick={() => handleCardClick('credit')}
             >
@@ -522,11 +520,11 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
                         {Math.round(creditUtilization)}%
                       </span>
                     </div>
-                    <Progress 
-                      value={creditUtilization} 
+                    <Progress
+                      value={creditUtilization}
                       className="h-2"
                       // @ts-ignore
-                      style={{'--progress-background': creditUtilization > 30 ? '#ef4444' : '#10b981'}}
+                      style={{ '--progress-background': creditUtilization > 30 ? '#ef4444' : '#10b981' }}
                     />
                   </div>
                 </div>
@@ -534,7 +532,7 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
             </Card>
 
             {/* NEW: Stocks & Investments Card */}
-            <Card 
+            <Card
               className="cursor-pointer hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02]"
               onClick={() => handleCardClick('investments')}
             >
@@ -584,7 +582,7 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
             </Card>
 
             {/* Recent Insights */}
-            <Card 
+            <Card
               id="insights-card"
               className="cursor-pointer hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02]"
               onClick={() => handleCardClick('spending')}
@@ -623,6 +621,7 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
               </CardContent>
             </Card>
           </div>
+
         ) : (
           /* Focused Card View */
           <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
@@ -644,7 +643,7 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
                     <X className="w-4 h-4" />
                   </Button>
                 </div>
-                
+
                 {selectedCard === 'networth' && (
                   <div className="flex space-x-2 mt-4">
                     {['1M', '6M', '1Y', 'All'].map((period) => (
@@ -661,7 +660,7 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
                   </div>
                 )}
               </CardHeader>
-              
+
               <CardContent className="p-8">
                 <div className="grid lg:grid-cols-2 gap-8">
                   {/* Left Column - Detailed Data */}
@@ -763,7 +762,7 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
                                   cy="50%"
                                   outerRadius={80}
                                   dataKey="amount"
-                                  label={({category, amount}) => `${category}: ₹${amount}`}
+                                  label={({ category, amount }) => `${category}: ₹${amount}`}
                                 >
                                   {spendingByCategory.map((entry, index) => (
                                     <Cell key={`cell-${index}`} fill={entry.color} />
@@ -829,7 +828,7 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
                             <div className="text-2xl font-semibold text-orange-600">₹456</div>
                             <div className="text-sm text-orange-600">vs ₹338 average</div>
                           </div>
-                          
+
                           <div className="p-6 border border-green-200 bg-green-50 rounded-lg">
                             <h3 className="font-medium text-green-800 mb-2">Great Savings!</h3>
                             <p className="text-sm text-green-700 mb-4">
@@ -984,11 +983,11 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
                     onChange={(e) => setChatInput(e.target.value)}
                     placeholder={
                       selectedCard === 'networth' ? 'Ask a question about your net worth...' :
-                      selectedCard === 'goals' ? 'Ask about your financial goals...' :
-                      selectedCard === 'loans' ? 'Ask about your loans, EMIs, or refinancing options...' :
-                      selectedCard === 'credit' ? 'Ask about your spending, recent transactions, or rewards...' :
-                      selectedCard === 'investments' ? 'Ask about your portfolio, a specific stock, or market trends...' :
-                      'Ask about your spending patterns...'
+                        selectedCard === 'goals' ? 'Ask about your financial goals...' :
+                          selectedCard === 'loans' ? 'Ask about your loans, EMIs, or refinancing options...' :
+                            selectedCard === 'credit' ? 'Ask about your spending, recent transactions, or rewards...' :
+                              selectedCard === 'investments' ? 'Ask about your portfolio, a specific stock, or market trends...' :
+                                'Ask about your spending patterns...'
                     }
                     className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
                     onKeyDown={(e) => {
@@ -997,8 +996,8 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
                       }
                     }}
                   />
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     onClick={handleSendMessage}
                     disabled={!chatInput.trim()}
                     className="gradient-accent hover:gradient-accent-hover text-white"
@@ -1010,6 +1009,27 @@ export function Dashboard({ userName, isFirstTime = false, onOnboardingComplete 
             </Card>
           </div>
         )}
+        {/* Header */}
+        <footer className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/40 backdrop-blur-md border border-border shadow-xl rounded-2xl px-6 py-3 flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
+            {/* <div className="w-8 h-8 gradient-accent rounded-lg flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-white" />
+            </div> */}
+            <h1 className="text-base font-semibold">Hi {userName}</h1>
+          </div>
+
+          <div className="flex items-center space-x-3 ml-4">
+            <Button variant="ghost" size="icon" onClick={() => navigate('/chat')}>
+              <MessageCircle className="w-5 h-5" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <Settings className="w-5 h-5" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <User className="w-5 h-5" />
+            </Button>
+          </div>
+        </footer>
       </main>
     </div>
   );

@@ -81,7 +81,7 @@ export function Signup({ onSignup }: SignupProps) {
         {/* Signup Card */}
         <Card className="shadow-soft-lg border-border/50">
           <CardHeader className="text-center pb-8">
-            <div className="w-12 h-12 gradient-accent rounded-xl flex items-center justify-center mx-auto mb-4">
+            <div className="w-12 h-12 gradient-accent rounded-full flex items-center justify-center mx-auto mb-4">
               <Sparkles className="w-6 h-6 text-white" />
             </div>
             <CardTitle className="text-2xl">Create Your Secure Financial Twin</CardTitle>
@@ -141,16 +141,14 @@ export function Signup({ onSignup }: SignupProps) {
                       className="mt-1"
                     />
                     <Label htmlFor="terms" className="text-sm leading-relaxed">
-                      By creating an account, I agree to the{' '}
-                      <a href="#" className="text-primary hover:underline">Terms of Service</a>{' '}
-                      and acknowledge the Data Privacy Promises below.
+                      I agree to the<a href="#" className="text-primary hover:underline">T&C</a>{' '}
                     </Label>
                   </div>
 
                   <Button
                     type="submit"
                     disabled={isLoading || !agreedToTerms}
-                    className="w-full h-12 gradient-accent hover:gradient-accent-hover text-white border-0 shadow-soft mt-6"
+                    className="rounded-3xl w-full h-12 gradient-accent hover:gradient-accent-hover text-white border-0 shadow-soft mt-6"
                   >
                     {isLoading ? 'Creating Your Account...' : 'Create My Secure Account'}
                   </Button>
@@ -171,11 +169,11 @@ export function Signup({ onSignup }: SignupProps) {
 
               {/* Right Column - Privacy Promises */}
               <div className="lg:border-l lg:border-border lg:pl-12">
-                <h3 className="text-xl font-medium mb-6 text-center lg:text-left">Our Privacy Promise To You</h3>
+                <h3 className="text-3xl font-medium mb-6 text-center lg:text-left">Our Privacy Promise To You</h3>
 
                 <div className="space-y-8">
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <div className="w-12 h-12 bg-blue-50 rounded-3xl flex items-center justify-center flex-shrink-0">
                       <Users className="w-6 h-6 text-blue-600" />
                     </div>
                     <div>
@@ -187,7 +185,7 @@ export function Signup({ onSignup }: SignupProps) {
                   </div>
 
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <div className="w-12 h-12 bg-green-50 rounded-3xl flex items-center justify-center flex-shrink-0">
                       <Shield className="w-6 h-6 text-green-600" />
                     </div>
                     <div>
@@ -199,7 +197,7 @@ export function Signup({ onSignup }: SignupProps) {
                   </div>
 
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <div className="w-12 h-12 bg-purple-50 rounded-3xl flex items-center justify-center flex-shrink-0">
                       <Lock className="w-6 h-6 text-purple-600" />
                     </div>
                     <div>
@@ -211,7 +209,7 @@ export function Signup({ onSignup }: SignupProps) {
                   </div>
                 </div>
 
-                <div className="mt-8 p-4 bg-muted/50 rounded-xl">
+                <div className="mt-8 p-4 bg-muted/50 rounded-3xl">
                   <p className="text-xs text-muted-foreground text-center">
                     🔒 Bank-level encryption • 🛡️ SOC 2 Type II compliant • 🔐 Zero-knowledge architecture
                   </p>

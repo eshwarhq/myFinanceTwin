@@ -10,8 +10,8 @@
   /* MyFinance Twin AI Color Palette */
   --primary-bg: #F8F9FA;
   --card-bg: #FFFFFF;
-  --primary-text: #3c4043;
-  --secondary-text: #5f6368;
+  --primary-text:rgb(62, 73, 83);
+  --secondary-text:rgb(62, 68, 76);
   --accent-blue: #1a73e8;
   --accent-cyan: #4fc3f7;
   
@@ -135,6 +135,20 @@
   body {
     @apply bg-background text-foreground;
     font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  @layer base {
+    body {
+      @apply text-gray-700;
+    }
+  
+    h1, h2, h3, h4, h5, h6 {
+      @apply text-gray-900;
+    }
+  
+    p, span, li, label {
+      @apply text-gray-600;
+    }
   }
 
   :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) h1 {

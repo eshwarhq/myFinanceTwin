@@ -88,7 +88,7 @@ export function Homepage() {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 gradient-accent rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 gradient-accent rounded-full flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-medium">MyFinance Twin AI</span>
@@ -109,7 +109,7 @@ export function Homepage() {
                 }} className="text-secondary-foreground hover:text-primary transition-colors">Security</a>
               <Button
                 onClick={() => navigate('/login')}
-                className="gradient-accent hover:gradient-accent-hover text-white border-0 shadow-soft"
+                className="rounded-2xl gradient-accent hover:gradient-accent-hover text-white border-0 shadow-soft"
               >
                 Sign In
               </Button>
@@ -117,7 +117,7 @@ export function Homepage() {
 
             <Button
               onClick={() => navigate('/login')}
-              className="md:hidden gradient-accent hover:gradient-accent-hover text-white border-0 shadow-soft"
+              className="rounded-full md:hidden gradient-accent hover:gradient-accent-hover text-white border-0 shadow-soft"
             >
               Sign In
             </Button>
@@ -140,7 +140,7 @@ export function Homepage() {
           {/* Chat Input Bar */}
           <div className="max-w-2xl mx-auto">
             <div
-              className={`relative bg-card border-2 rounded-xl p-4 shadow-soft-lg transition-all duration-300 ${isHovered ? 'border-primary shadow-lg' : 'border-border'
+              className={`relative bg-card border-2 rounded-full p-4 shadow-soft-lg transition-all duration-300 ${isHovered ? 'border-primary shadow-lg' : 'border-border'
                 }`}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
@@ -151,7 +151,7 @@ export function Homepage() {
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
                     placeholder="Ask me anything about your finances..."
-                    className="border-0 bg-transparent text-lg p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className="border-0 bg-transparent ml-4 text-lg p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && chatInput.trim()) {
                         navigate('/signup');
@@ -159,7 +159,7 @@ export function Homepage() {
                     }}
                   />
                 </div>
-                <button className="p-2 hover:bg-muted rounded-lg transition-colors group">
+                <button className="p-2 hover:bg-muted rounded-full transition-colors group">
                   <Mic className="w-5 h-5 text-muted-foreground group-hover:text-primary" />
                 </button>
               </div>
@@ -189,9 +189,9 @@ export function Homepage() {
               return (
                 <div
                   key={index}
-                  className="bg-card rounded-xl p-8 shadow-soft hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02] border border-border/50"
+                  className="bg-card rounded-2xl p-8 shadow-soft hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02] border border-border/50"
                 >
-                  <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mb-6">
+                  <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center mb-6">
                     <IconComponent className="w-6 h-6 text-blue-600" />
                   </div>
                   <h3 className="mb-3">{feature.title}</h3>
@@ -314,43 +314,76 @@ export function Homepage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                title: 'Intelligent Analysis',
-                icon: <Sparkles className="w-6 h-6 text-blue-600" />,
-                bg: 'bg-blue-100',
-                text: 'Advanced AI that understands your unique financial patterns and provides personalized insights.'
-              },
-              {
-                title: 'Future Simulation',
-                icon: <div className="w-6 h-6 bg-green-600 rounded-full" />,
-                bg: 'bg-green-100',
-                text: 'Visualize different financial scenarios and their long-term impact on your goals.'
-              },
-              {
-                title: 'Anomaly Detection',
-                icon: <div className="w-6 h-6 bg-purple-600 rounded-sm" />,
-                bg: 'bg-purple-100',
-                text: 'Automatically spot unusual spending patterns and potential financial risks.'
-              }
-            ].map(({ title, icon, bg, text }) => (
-              <div key={title} className="bg-card rounded-xl p-8 shadow-soft hover:shadow-soft-lg transition-shadow text-center">
-                <div className={`w-12 h-12 ${bg} rounded-lg flex items-center justify-center mb-4 mx-auto`}>
-                  {icon}
-                </div>
-                <h3 className="text-lg font-semibold mb-3">{title}</h3>
-                <p className="text-sm text-muted-foreground">{text}</p>
+          {/* Original Features Preview Section - Now acts as final CTA */}
+          <section className="container mx-auto px-6 py-20">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-16">
+                <h2 className="mb-4">Ready to Meet Your Financial Twin?</h2>
+                <p className="text-muted-foreground max-w-2xl mx-auto">
+                  Join thousands of users who have transformed their financial decision-making with AI-powered insights.
+                </p>
               </div>
-            ))}
-          </div>
+
+              <div className="grid md:grid-cols-3 gap-8">
+                {[
+                  {
+                    title: 'Intelligent Analysis',
+                    icon: (
+                      <div className="w-6 h-6 flex items-center justify-center">
+                        <Sparkles className="w-full h-full text-blue-600" />
+                      </div>
+                    ),
+                    cardBg: 'bg-blue-200',
+                    iconBg: 'bg-blue-100',
+                    text: 'Advanced AI that understands your unique financial patterns and provides personalized insights.'
+                  },
+                  {
+                    title: 'Future Simulation',
+                    icon: (
+                      <div className="w-6 h-6 bg-green-600 rounded-full" />
+                    ),
+                    cardBg: 'bg-green-200',
+                    iconBg: 'bg-green-100',
+                    text: 'Visualize different financial scenarios and their long-term impact on your goals.'
+                  },
+                  {
+                    title: 'Anomaly Detection',
+                    icon: (
+                      <div className="w-6 h-6 bg-purple-600" />
+                    ),
+                    cardBg: 'bg-purple-200',
+                    iconBg: 'bg-purple-100',
+                    text: 'Automatically spot unusual spending patterns and potential financial risks.'
+                  }
+                ].map(({ title, icon, cardBg, iconBg, text }) => (
+                  <div
+                    key={title}
+                    className={`rounded-2xl p-8 transition-shadow shadow-soft hover:shadow-soft-lg ${cardBg}`}
+                  >
+                    {/* Optional icon box
+                      <div
+                        className={`w-12 h-12 ${iconBg} rounded-full flex items-center justify-center mb-4`}
+                      >
+                        {icon}
+                      </div>
+                    */}
+                    <h3 className="text-xl mb-3 text-left">{title}</h3>
+                    <p className="text-sm text-muted-foreground text-left">{text}</p>
+                  </div>
+                ))}
+              </div>
+
+
+            </div>
+          </section>
+
 
           {/* Final CTA */}
           <div className="text-center mt-16">
             <Button
               onClick={() => navigate('/signup')}
               size="lg"
-              className="gradient-accent hover:gradient-accent-hover text-white border-0 shadow-soft-lg px-8 h-14 text-lg"
+              className="rounded-full gradient-accent hover:gradient-accent-hover text-white border-0 shadow-soft-lg px-8 h-14 text-lg"
             >
               Create Your Financial Twin
             </Button>
