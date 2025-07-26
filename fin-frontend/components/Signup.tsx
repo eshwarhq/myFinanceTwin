@@ -16,7 +16,9 @@ export function Signup({ onSignup }: SignupProps) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    password: ''
+    password: '',
+    // keyFeature1: '',
+    mobileNumber: ''
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +31,7 @@ export function Signup({ onSignup }: SignupProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.email || !formData.password || !agreedToTerms) return;
+    if (!formData.name || !formData.email || !formData.mobileNumber  || !formData.password || !agreedToTerms) return;
 
     try {
       setIsLoading(true);
@@ -119,6 +121,32 @@ export function Signup({ onSignup }: SignupProps) {
                       className="h-12 border-border focus:border-primary transition-colors"
                     />
                   </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="mobileNumber">Mobile number</Label>
+                    <Input
+                      id="mobileNumber"
+                      type="text"
+                      value={formData.mobileNumber}
+                      onChange={(e) => setFormData({ ...formData, mobileNumber: e.target.value })}
+                      placeholder="Enter your mobile number linked to Fi"
+                      required
+                      className="h-12 border-border focus:border-primary transition-colors"
+                    />
+                  </div>
+{/* 
+                  <div className="space-y-2">
+                    <Label htmlFor="keyFeature1">Wildfire question.!?</Label>
+                    <Input
+                      id="keyFeature1"
+                      type="text"
+                      value={formData.keyFeature1}
+                      onChange={(e) => setFormData({ ...formData, keyFeature1: e.target.value })}
+                      placeholder="Enter your wildest monetary fantasy"
+                      required
+                      className="h-12 border-border focus:border-primary transition-colors"
+                    />
+                  </div> */}
 
                   <div className="space-y-2">
                     <Label htmlFor="password">Password</Label>

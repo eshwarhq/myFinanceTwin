@@ -14,6 +14,7 @@ export function Login({ onLogin }: LoginProps) {
   const auth = getAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -71,6 +72,19 @@ export function Login({ onLogin }: LoginProps) {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  required
+                  className="h-12 border-border focus:border-primary transition-colors"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="mobileNumber">Mobile number</Label>
+                <Input
+                  id="mobileNumber"
+                  type="text"
+                  value={mobileNumber}
+                  onChange={(e) => setMobileNumber(e.target.value)}
                   placeholder="Enter your email"
                   required
                   className="h-12 border-border focus:border-primary transition-colors"
