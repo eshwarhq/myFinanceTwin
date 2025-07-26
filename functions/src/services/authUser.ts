@@ -3,10 +3,10 @@ import { db, auth } from '../connections/databaseConnection';
 import axios from 'axios';
 
 const signUp = async (req: Request, res: Response) => {
-  const { name, email, password, agreedToTerms, mobileNumber } = req.body;
+  const { name, email, password, mobileNumber, agreedToTerms } = req.body;
   const redis = req.redisClient;
 
-  if (!name || !email || !password || !agreedToTerms) {
+  if (!name || !email || !password || !mobileNumber || !agreedToTerms) {
     return res.status(400).json({ success: false, message: 'Missing credentials' });
   }
 
@@ -22,6 +22,7 @@ const signUp = async (req: Request, res: Response) => {
       email,
       mobileNumber,
       agreedToTerms,
+      mobileNumber,
       createdAt: new Date().toISOString(),
     });
 
