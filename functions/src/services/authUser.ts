@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { db, auth } from '../connections/databaseConnection';
+import axios from 'axios';
 
 const signUp = async (req: Request, res: Response) => {
-  const { name, email, password, agreedToTerms } = req.body;
+  const { name, email, password, agreedToTerms, mobileNumber } = req.body;
   const redis = req.redisClient;
 
   if (!name || !email || !password || !agreedToTerms) {
@@ -19,11 +20,14 @@ const signUp = async (req: Request, res: Response) => {
     await db.collection('users').doc(userRecord.uid).set({
       name,
       email,
+      mobileNumber,
       agreedToTerms,
       createdAt: new Date().toISOString(),
     });
 
-    await redis?.set(userRecord.uid, JSON.stringify(req.body), 'EX', 60 * 60);
+    await redis?.set(userRecord.uid, JSON.stringify(req.body), 'EX', 43200);
+
+    await mcpLoginHelper(userRecord.uid, mobileNumber);
 
     res.cookie('session_id', userRecord.uid, {
       httpOnly: true,
@@ -50,6 +54,8 @@ const signIn = async (req: Request, res: Response) => {
     const decoded = await auth.verifyIdToken(idToken);
     const userData = await db.collection('users').doc(decoded.uid).get();
 
+    await mcpLoginHelper(userData.data()?.uid,userData.data()?.mobileNumber );
+
     return res.status(200).json({
       success: true,
       uid: decoded.uid,
@@ -62,4 +68,29 @@ const signIn = async (req: Request, res: Response) => {
   }
 };
 
-export default { signUp, signIn };
+
+
+export async function mcpLoginHelper(uid: string, phoneNumber: string, otp: string = '1234') {
+  const MCP_BASE_URL = 'http://localhost:8080';
+  const sessionId = uid.startsWith('mcp-session-') ? uid : `mcp-session-${uid}`;
+  try {
+    const response = await axios.post(
+      `${MCP_BASE_URL}/login`,
+      new URLSearchParams({ sessionId, phoneNumber, otp }).toString(),
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      }
+    );
+    if (response.status === 200) {
+      return { success: true, sessionId };
+    } else {
+      return { success: false, message: 'MCP login failed', sessionId };
+    }
+  } catch (error: any) {
+    return { success: false, message: 'MCP login error', details: error?.response?.data || error.message };
+  }
+}
+
+export default { signUp, signIn, mcpLoginHelper };

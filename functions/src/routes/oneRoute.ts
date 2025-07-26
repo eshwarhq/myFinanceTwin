@@ -2,6 +2,8 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import authUser from '../services/authUser';
+import * as fiMcpService from '../services/fiMcpService';
+
 import chatService from '../services/chatService';
 
 const router = express.Router();
@@ -20,8 +22,22 @@ router.get('/luffy', (_req: Request, res: Response) => {
   });
 });
 
-router.post('/signup', authUser.signUp);
+router.post('/fi-mcp/:toolName', async (req, res) => {
+  try {
+    console.log(req.params)
+    const data = await fiMcpService.callTool(req.params.toolName, req.body, "sessionId");
+    res.json(data);
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(500).json({ error: err.message });
+    } else {
+      res.status(500).json({ error: 'An unknown error occurred.' });
+    }
+  }
+});
+
+router.post('/signup', authUser.signUp)
 router.post('/signIn', authUser.signIn);
-router.get('/streamChat', chatService.chat);
+router.get('/streamChat', chatService.chat)
 
 export default router;
