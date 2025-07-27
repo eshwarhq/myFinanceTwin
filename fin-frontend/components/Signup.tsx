@@ -38,14 +38,14 @@ export function Signup({ onSignup }: SignupProps) {
 
       const payload = { ...formData, agreedToTerms }; // ⬅️ include it if needed by backend
 
-      const res1 = await fetch('http://localhost:5000/api/health', {
+      const res1 = await fetch('https://luffy-backend-248534326141.asia-south1.run.app/api/health', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
 
       console.log(res1)
 
-      const res = await fetch('http://localhost:5000/api/signup', {
+      const res = await fetch('https://luffy-backend-248534326141.asia-south1.run.app/api/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

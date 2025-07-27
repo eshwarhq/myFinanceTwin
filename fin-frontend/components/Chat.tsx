@@ -40,7 +40,7 @@ export function Chat({ userName }: ChatProps) {
 
   const fetchStream = async (messageId: string, history: any, message: string) => {
     console.log(":::::::::::", messageId, message, history);
-    const response = await fetch('http://localhost:5000/api/streamChat',
+    const response = await fetch('https://luffy-backend-248534326141.asia-south1.run.app/api/streamChat',
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

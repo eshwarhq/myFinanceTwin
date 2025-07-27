@@ -271,7 +271,7 @@ export function Dashboard({ isFirstTime = false, onOnboardingComplete }: Dashboa
   };
 
   const fetchContextStream = async (messageId: string, cardId: string) => {
-    const response = await fetch('http://localhost:5000/api/streamChat', {
+    const response = await fetch('https://luffy-backend-248534326141.asia-south1.run.app/api/streamChat', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     });

@@ -42,7 +42,7 @@ export function Login({ onLogin }: LoginProps) {
     try {
       const userCred = await signInWithEmailAndPassword(auth, email, password);
       const token = await userCred.user.getIdToken();
-      const userRecord = await fetch('http://localhost:5000/api/signIn', {
+      const userRecord = await fetch('https://luffy-backend-248534326141.asia-south1.run.app/api/signIn', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ idToken: token }),

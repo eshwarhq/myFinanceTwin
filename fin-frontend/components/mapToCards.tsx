@@ -1,6 +1,6 @@
 export const mapDataToCards = async () => {
 
-    const allData = await fetch('http://localhost:5000/api/fi-mcp-all/allTools', {
+    const allData = await fetch('https://luffy-backend-248534326141.asia-south1.run.app/api/fi-mcp-all/allTools', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
