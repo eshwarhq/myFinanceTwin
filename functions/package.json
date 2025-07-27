@@ -17,6 +17,7 @@
   },
   "main": "lib/index.js",
   "dependencies": {
+    "@google-cloud/vertexai": "^1.10.0",
     "@types/ioredis": "^4.28.10",
     "axios": "^1.11.0",
     "compression": "^1.8.1",

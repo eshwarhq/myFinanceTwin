@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -30,25 +31,19 @@ interface Message {
 
 export function Chat({ userName }: ChatProps) {
   const navigate = useNavigate();
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      type: 'ai',
-      content: `Hello ${userName}! I'm your financial twin AI. I can analyze your spending patterns, help with budgeting, answer questions about your investments, and simulate future financial scenarios. What would you like to explore today?`,
-      timestamp: new Date(),
-    }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [expandedExplanations, setExpandedExplanations] = useState<Set<string>>(new Set());
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const fetchStream = async (messageId: string) => {
+  const fetchStream = async (messageId: string, history: any, message: string) => {
     const response = await fetch('http://localhost:5000/api/streamChat',
       {
-        method: 'GET',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ history, message }),
       });
     const reader = response.body?.getReader();
     const decoder = new TextDecoder();
@@ -77,24 +72,6 @@ export function Chat({ userName }: ChatProps) {
     }
   };
 
-  // const mockResponses = [
-  //   {
-  //     content: "Based on your spending patterns, I notice you've spent $456 on dining out this month, which is 35% above your usual average of $338. This represents about 12% of your monthly income.",
-  //     hasExplanation: true,
-  //     explanation: "I calculated this by analyzing your transaction history from the past 6 months. Your average monthly dining expenses were $338 ± $45. This month's $456 represents a $118 increase (35% above average). Relative to your $3,800 monthly income, this is 12% of your total earnings."
-  //   },
-  //   {
-  //     content: "Your emergency fund goal is progressing well! You currently have $8,500 saved toward your $15,000 target. At your current savings rate of approximately $400/month, you'll reach your goal in about 16 months.",
-  //     hasExplanation: true,
-  //     explanation: "Target: $15,000 | Current: $8,500 | Remaining: $6,500. Based on your last 3 months of savings deposits averaging $400/month: $6,500 ÷ $400 = 16.25 months to completion."
-  //   },
-  //   {
-  //     content: "Your investment portfolio has grown 8.4% this month, outperforming the S&P 500's 6.2% return. Your current allocation of 65% stocks, 25% bonds, and 10% cash aligns well with your moderate risk tolerance.",
-  //     hasExplanation: true,
-  //     explanation: "Portfolio value start of month: $39,100 | Current: $42,350 | Gain: $3,250 (8.4%). S&P 500 benchmark return: 6.2%. Your allocation percentages are calculated from total portfolio value: Stocks $27,528 (65%), Bonds $10,588 (25%), Cash $4,235 (10%)."
-  //   }
-  // ];
-
   useEffect(() => {
     if (scrollAreaRef.current) {
       scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
@@ -111,10 +88,15 @@ export function Chat({ userName }: ChatProps) {
       timestamp: new Date(),
     };
 
+    const history = messages.map(msg => ({
+      role: msg.type === 'user' ? 'user' : 'model',
+      parts: [{ text: msg.content }],
+    }));
+
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
 
-    fetchStream(userMessage.id); // <-- pass message ID for tracking
+    fetchStream(userMessage.id, history, inputValue);
   };
 
 
@@ -234,8 +216,7 @@ export function Chat({ userName }: ChatProps) {
                 className={`absolute right-3 top-1/2 transform -translate-y-1/2 p-2 rounded-full transition-all duration-300 ${isListening
                   ? 'bg-red-100 text-red-600'
                   : 'hover:bg-muted text-muted-foreground hover:text-primary'
-                  }`}
-              >
+                  }`}>
                 {isListening ? (
                   <div className="relative">
                     <div className="w-5 h-5 bg-red-600 rounded-full animate-pulse" />

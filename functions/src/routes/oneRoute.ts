@@ -51,6 +51,6 @@ router.post('/fi-mcp-all/allTools', async (req, res) => {
 
 router.post('/signup', authUser.signUp)
 router.post('/signIn', authUser.signIn);
-router.get('/streamChat', chatService.chat)
+router.post('/streamChat', chatService.chat)
 
 export default router;
