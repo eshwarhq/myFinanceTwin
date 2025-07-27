@@ -39,6 +39,7 @@ export function Chat({ userName }: ChatProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const fetchStream = async (messageId: string, history: any, message: string) => {
+    console.log(":::::::::::", messageId, message, history);
     const response = await fetch('http://localhost:5000/api/streamChat',
       {
         method: 'POST',

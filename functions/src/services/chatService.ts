@@ -9,6 +9,7 @@ import {
 const chat = async (req: Request, res: Response): Promise<void> => {
   try {
     const { history, message } = req.body;
+    console.log(req.body)
     const vertex_ai = new VertexAI({
       project: "my-finance-demo",
       location: "us-central1",
@@ -46,17 +47,17 @@ const chat = async (req: Request, res: Response): Promise<void> => {
       history: history,
     });
 
-    const stream = await chat.sendMessageStream(message);
+    const stream = await chat.sendMessage(message);
 
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache");
     res.setHeader("Connection", "keep-alive");
 
-    for await (const item of stream.stream) {
-      res.write(JSON.stringify(item));
-    }
+    // for await (const item of stream.stream) {
+    //   res.write(JSON.stringify(item));
+    // }
 
-    res.end();
+    res.send({stream});
   } catch (error) {
     console.error("Stream error:", error);
     res.status(500).send("Internal Server Error");

@@ -9,7 +9,7 @@ const generateUUID = (): string => {
 
 const signUp = async (req: Request, res: Response) => {
   const { name, email, password, mobileNumber, agreedToTerms } = req.body;
-  const redis = req.redisClient;
+  // const redis = req.redisClient;
 
   if (!name || !email || !password || !mobileNumber || !agreedToTerms) {
     return res.status(400).json({ success: false, message: 'Missing credentials' });
@@ -30,7 +30,7 @@ const signUp = async (req: Request, res: Response) => {
       createdAt: new Date().toISOString(),
     });
 
-    await redis?.set(userRecord.uid, JSON.stringify(req.body), 'EX', 43200);
+    // await redis?.set(userRecord.uid, JSON.stringify(req.body), 'EX', 43200);
 
     await mcpLoginHelper(userRecord.uid, mobileNumber);
 

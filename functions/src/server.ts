@@ -7,8 +7,8 @@ import morgan from 'morgan';
 import compression from 'compression';
 import { rateLimit } from 'express-rate-limit';
 import oneRoute from './routes/oneRoute';
-import redisMiddleware from './middlewares/redisMiddleware';
-import RedisConnection from './connections/redisConnection';
+// import redisMiddleware from './middlewares/redisMiddleware';
+// import RedisConnection from './connections/redisConnection';
 // import { verifyAuth } from './middlewares/authMiddleware';
 
 const app = express();
@@ -52,14 +52,14 @@ app.get('/api/health', (_req, res) => {
   res.status(200).send('🔥 Firebase Express API up and running!');
 });
 
-app.get('/health/redis', async (req, res) => {
-  const client = RedisConnection.getInstance().getClient();
-  const pong = await client.ping();
-  res.send({ status: pong });
-});
+// app.get('/health/redis', async (req, res) => {
+//   const client = RedisConnection.getInstance().getClient();
+//   const pong = await client.ping();
+//   res.send({ status: pong });
+// });
 
 // app.use(verifyAuth)
-app.use(redisMiddleware)
+// app.use(redisMiddleware)
 
 // ✅ Modular Routes Mounting
 app.use('/api', oneRoute);
