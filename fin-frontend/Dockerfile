@@ -27,6 +27,6 @@ RUN npm install -g serve
 # Copy built files
 COPY --from=build /app/dist /app/dist
 
-EXPOSE 5000
+EXPOSE 5147
 
-CMD ["serve", "-s", "dist", "-l", "5000"]
+CMD ["serve", "-s", "dist", "-l", "5147"]
