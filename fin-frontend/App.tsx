@@ -7,7 +7,7 @@ import { ConnectAccounts } from './components/ConnectAccounts';
 import { BuildingTwin } from './components/BuildingTwin';
 import { Dashboard } from './components/Dashboard';
 import { Chat } from './components/Chat';
-import { Dashboard1 } from './components/dashboard1';
+import { Dashboard1 } from './components/Dashboard1';
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
