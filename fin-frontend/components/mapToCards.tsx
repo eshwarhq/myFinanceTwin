@@ -12,12 +12,36 @@ export const mapDataToCards = async () => {
     const data = await allData.json();
 
     let json: { [key: string]: any } = {};
-    json['fetch_net_worth'] = mapNetWorthCard(data?.fetch_net_worth);
+    json['fetch_net_worth'] = mapNetWorthCard(data?.data?.fetch_net_worth);
     return json;
 };
 
 function mapNetWorthCard(fetch_net_worth: any): any {
     // Implement your mapping logic here
-    return fetch_net_worth; // Placeholder: return as-is for now
+    // const netWorthData = fetch_net_worth.netWorth.monthWise.map((entry: any) => ({
+    //     month: entry.month,      // e.g., 'Jan'
+    //     value: entry.total,      // net worth value for the month
+    //   }));
+      
+    const fetch_net_worth_data = {
+        netWorthValue: fetch_net_worth?.netWorthResponse?.totalNetWorthValue?.units,
+        // percentage: getNetWorthChangePercent(fetch_net_worth),
+        // netWorthData
+    }
+
+    console.log("Net worth data: ", fetch_net_worth_data)
+
+    return fetch_net_worth_data; // Placeholder: return as-is for now
 };
 
+function getNetWorthChangePercent(fetch_net_worth: any): number {
+    const current = fetch_net_worth.netWorth.total;
+    const lastYear = fetch_net_worth.netWorth.lastYearTotal;
+
+    if (!lastYear || lastYear === 0) return 0;
+
+    const change = current - lastYear;
+    const percentChange = (change / lastYear) * 100;
+
+    return parseFloat(percentChange.toFixed(2));
+}

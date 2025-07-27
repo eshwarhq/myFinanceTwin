@@ -47,7 +47,7 @@ export function Chat({ userName }: ChatProps) {
   const fetchStream = async (messageId: string) => {
     const response = await fetch('http://localhost:5000/api/streamChat',
       {
-        method: 'POST',
+        method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
     const reader = response.body?.getReader();
@@ -148,7 +148,7 @@ export function Chat({ userName }: ChatProps) {
     <div className="min-h-screen bg-background flex flex-col">
       {/* Chat Messages */}
       <div className="flex-1 ml-0 mr-3 px-0 py-6">
-        <ScrollArea className="h-[calc(100vh-200px)]" ref={scrollAreaRef}>
+        <ScrollArea className="h-auto" ref={scrollAreaRef}>
           <div className="space-y-6 pb-6">
             {messages.map((message) => (
               <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>

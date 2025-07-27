@@ -49,6 +49,7 @@ export function Login({ onLogin }: LoginProps) {
       });
       const acData = await userRecord.json();
       sessionStorage.setItem('username', acData?.userData?.name);
+      sessionStorage.setItem('userId', acData?.uid);
 
       setIsLoading(true);
       await new Promise((resolve) => setTimeout(resolve, 1000));

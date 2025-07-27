@@ -50,7 +50,7 @@ export async function callAllTools(
 ): Promise<Record<string, any>> {
   try {
     const toolPromises = allTools.map((tool) => {
-      console.log("toolname: ", tool);
+      console.log("toolname: ", tool, sessionId);
       return callTool(tool, args, sessionId).then((res) => ({
         tool,
         result: res,
