@@ -1,5 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
-import { ScrollArea } from './ui/scroll-area';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -32,7 +31,7 @@ import {
   Lightbulb,
   Star,
   Award,
-  Bot
+  PartyPopper
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Chat } from './Chat';
@@ -181,25 +180,13 @@ export function Dashboard({ isFirstTime = false, onOnboardingComplete }: Dashboa
   console.log("Dashboard: ", userName)
   const navigate = useNavigate();
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
+  const [chatInput, setChatInput] = useState('');
   const [timeframe, setTimeframe] = useState('6M');
   const [showCoachMarks, setShowCoachMarks] = useState(isFirstTime);
   const [completedCoachMarks, setCompletedCoachMarks] = useState<string[]>([]);
   const [showWelcomeBanner, setShowWelcomeBanner] = useState(false);
   const [netWorthValue, setNetWorthValue] = useState(0);
   const [isAnimatingValue, setIsAnimatingValue] = useState(isFirstTime);
-
-  const [contextChats, setContextChats] = useState<{
-    [cardId: string]: {
-      messages: {
-        id: string;
-        type: 'user' | 'ai';
-        content: string;
-        timestamp: Date;
-      }[];
-      input: string;
-    };
-  }>({});
-  const contextScrollRef = useRef<HTMLDivElement>(null);
 
   // Calculate totals for at-a-glance cards
   const totalLoanBalance = loansData.reduce((sum, loan) => sum + loan.currentBalance, 0);
@@ -252,116 +239,19 @@ export function Dashboard({ isFirstTime = false, onOnboardingComplete }: Dashboa
     }
   }, [isAnimatingValue, isFirstTime]);
 
-  useEffect(() => {
-    if (contextScrollRef.current) {
-      contextScrollRef.current.scrollTop = contextScrollRef.current.scrollHeight;
-    }
-  }, [selectedCard, contextChats]);
-
-  const currentChat = contextChats[selectedCard ?? ''] || {
-    messages: [
-      {
-        id: '1',
-        type: 'ai',
-        content: `Hi! Ask me anything about this section.`,
-        timestamp: new Date(),
-      }
-    ],
-    input: ''
-  };
-
-  const fetchContextStream = async (messageId: string, cardId: string) => {
-    const response = await fetch('https://luffy-backend-248534326141.asia-south1.run.app/api/streamChat', {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    });
-    const reader = response.body?.getReader();
-    const decoder = new TextDecoder();
-
-    if (reader) {
-      let streamed = '';
-      const newMessage = {
-        id: messageId + '-ai',
-        type: 'ai',
-        content: '',
-        timestamp: new Date(),
-      } as {
-        id: string;
-        type: "ai";
-        content: string;
-        timestamp: Date;
-      };
-      setContextChats(prev => ({
-        ...prev,
-        [cardId]: {
-          ...prev[cardId],
-          messages: [...(prev[cardId]?.messages || []), newMessage],
-          input: ''
-        }
-      }));
-
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) break;
-        streamed += decoder.decode(value);
-
-        setContextChats(prev => ({
-          ...prev,
-          [cardId]: {
-            ...prev[cardId],
-            messages: prev[cardId].messages.map(msg =>
-              msg.id === newMessage.id ? { ...msg, content: streamed } : msg
-            ),
-            input: ''
-          }
-        }));
-      }
-    }
-  };
-
-  const handleContextInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setContextChats(prev => ({
-      ...prev,
-      [selectedCard ?? '']: {
-        ...currentChat,
-        input: e.target.value
-      }
-    }));
-  };
-
-  const handleContextSend = () => {
-    if (!currentChat.input.trim()) return;
-    const userMessage = {
-      id: Date.now().toString(),
-      type: 'user',
-      content: currentChat.input,
-      timestamp: new Date() as Date,
-    } as {
-      id: string;
-      type: "user";
-      content: string;
-      timestamp: Date;
-    };
-    setContextChats(prev => ({
-      ...prev,
-      [selectedCard ?? '']: {
-        ...currentChat,
-        messages: [
-          ...(currentChat.messages as { id: string; type: "user" | "ai"; content: string; timestamp: Date; }[]),
-          userMessage
-        ],
-        input: ''
-      }
-    }));
-    fetchContextStream(userMessage.id, selectedCard ?? '');
-  };
-
   const handleCardClick = (cardId: string) => {
     setSelectedCard(cardId);
   };
 
   const handleCloseCard = () => {
     setSelectedCard(null);
+    setChatInput('');
+  };
+
+  const handleSendMessage = () => {
+    if (chatInput.trim()) {
+      setChatInput('');
+    }
   };
 
   const handleCoachMarkComplete = (coachMarkId: string) => {
@@ -664,6 +554,56 @@ export function Dashboard({ isFirstTime = false, onOnboardingComplete }: Dashboa
                   </div>
                 </CardContent>
               </Card>
+              <Card className="bg-black hover:shadow-soft-lg transition-shadow">
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center space-x-2">
+                    <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                      <AlertTriangle className="w-5 h-5 text-red-600" />
+                    </div>
+                    <span className="text-white">Disaster Management</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-white text-sm text-muted-foreground">Emergency Fund</span>
+                    <span className="font-medium text-orange-500">₹5,000</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white text-sm text-muted-foreground">Insurance</span>
+                    <span className="font-medium text-yellow-400">₹1,200</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white text-sm text-muted-foreground">Medical</span>
+                    <span className="font-medium text-pink-500">₹800</span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-black hover:shadow-soft-lg transition-shadow">
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center space-x-2">
+                    <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
+                      <PartyPopper className="w-5 h-5 text-purple-600" />
+                    </div>
+                    <span className="text-white">Enjoyment Funds</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-white text-sm text-muted-foreground">Travel</span>
+                    <span className="font-medium text-blue-400">₹3,000</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white text-sm text-muted-foreground">Dining Out</span>
+                    <span className="font-medium text-green-400">₹1,500</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white text-sm text-muted-foreground">Streaming & Subscriptions</span>
+                    <span className="font-medium text-fuchsia-500">₹700</span>
+                  </div>
+                </CardContent>
+              </Card>
+
 
               {/* Recent Insights */}
             </div>
@@ -708,15 +648,12 @@ export function Dashboard({ isFirstTime = false, onOnboardingComplete }: Dashboa
                 </CardHeader>
 
                 <CardContent className="p-8">
-                  <div className="flex flex-col lg:flex-row gap-8 relative">
-                    {/* Left: Card Details (sticky) */}
-                    <div
-                      className="flex-1 lg:max-w-[65%] lg:sticky lg:top-0 self-start"
-                      style={{ alignSelf: 'flex-start' }}
-                    >
+                  <div className="grid lg:grid-cols-2 gap-8">
+                    {/* Left Column - Detailed Data */}
+                    <div>
                       {selectedCard === 'networth' && (
                         <div>
-                          <div className="h-auto mb-0">
+                          <div className="h-64 mb-8">
                             <ResponsiveContainer width="100%" height="100%">
                               <LineChart data={netWorthData}>
                                 <XAxis dataKey="month" />
@@ -891,183 +828,170 @@ export function Dashboard({ isFirstTime = false, onOnboardingComplete }: Dashboa
                       )}
                     </div>
 
-                    {/* Right: AI Insights + Contextual Chat */}
-                    <div className="w-full lg:w-[32%] flex flex-col border-l border-border pl-4">
-                      {/* AI Insights */}
-                      <div className="mb-4">
-                        <h3 className="text-lg font-medium mb-6 flex items-center">
-                          <Lightbulb className="w-5 h-5 mr-2 text-yellow-600" />
-                          {selectedCard === 'loans' && 'AI-Powered Recommendations'}
-                          {selectedCard === 'credit' && 'Smart Recommendations'}
-                          {selectedCard === 'investments' && 'Market Opportunities & Insights'}
-                          {(selectedCard === 'networth' || selectedCard === 'goals' || selectedCard === 'spending') && 'AI Insights'}
-                        </h3>
+                    {/* Right Column - AI Insights & Recommendations */}
+                    <div>
+                      <h3 className="text-lg font-medium mb-6 flex items-center">
+                        <Lightbulb className="w-5 h-5 mr-2 text-yellow-600" />
+                        {selectedCard === 'loans' && 'AI-Powered Recommendations'}
+                        {selectedCard === 'credit' && 'Smart Recommendations'}
+                        {selectedCard === 'investments' && 'Market Opportunities & Insights'}
+                        {(selectedCard === 'networth' || selectedCard === 'goals' || selectedCard === 'spending') && 'AI Insights'}
+                      </h3>
 
-                        <div className="space-y-6">
-                          {selectedCard === 'loans' && (
-                            <>
-                              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                                <div className="flex items-start space-x-3">
-                                  <Star className="w-5 h-5 text-blue-600 mt-0.5" />
-                                  <div>
-                                    <h4 className="font-medium text-blue-800 mb-2">Refinancing Opportunity</h4>
-                                    <p className="text-sm text-blue-700">
-                                      Based on your credit score of 785, you may be eligible for these lower-interest refinancing options.
-                                    </p>
-                                  </div>
+                      <div className="space-y-6">
+                        {selectedCard === 'loans' && (
+                          <>
+                            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                              <div className="flex items-start space-x-3">
+                                <Star className="w-5 h-5 text-blue-600 mt-0.5" />
+                                <div>
+                                  <h4 className="font-medium text-blue-800 mb-2">Refinancing Opportunity</h4>
+                                  <p className="text-sm text-blue-700">
+                                    Based on your credit score of 785, you may be eligible for these lower-interest refinancing options.
+                                  </p>
                                 </div>
                               </div>
+                            </div>
 
-                              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                                <div className="flex items-start space-x-3">
-                                  <Award className="w-5 h-5 text-green-600 mt-0.5" />
-                                  <div>
-                                    <h4 className="font-medium text-green-800 mb-2">Pre-payment Insight</h4>
-                                    <p className="text-sm text-green-700">
-                                      Pre-paying an extra ₹5,000/month on your car loan could save you ₹45,000 in interest.
-                                    </p>
-                                  </div>
+                            <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                              <div className="flex items-start space-x-3">
+                                <Award className="w-5 h-5 text-green-600 mt-0.5" />
+                                <div>
+                                  <h4 className="font-medium text-green-800 mb-2">Pre-payment Insight</h4>
+                                  <p className="text-sm text-green-700">
+                                    Pre-paying an extra ₹5,000/month on your car loan could save you ₹45,000 in interest.
+                                  </p>
                                 </div>
                               </div>
-                            </>
-                          )}
+                            </div>
+                          </>
+                        )}
 
-                          {selectedCard === 'credit' && (
-                            <>
-                              <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                                <div className="flex items-start space-x-3">
-                                  <Clock className="w-5 h-5 text-yellow-600 mt-0.5" />
-                                  <div>
-                                    <h4 className="font-medium text-yellow-800 mb-2">Expiring Rewards</h4>
-                                    <p className="text-sm text-yellow-700">
-                                      You have 500 reward points expiring next week. Here's where you can use them.
-                                    </p>
-                                  </div>
+                        {selectedCard === 'credit' && (
+                          <>
+                            <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                              <div className="flex items-start space-x-3">
+                                <Clock className="w-5 h-5 text-yellow-600 mt-0.5" />
+                                <div>
+                                  <h4 className="font-medium text-yellow-800 mb-2">Expiring Rewards</h4>
+                                  <p className="text-sm text-yellow-700">
+                                    You have 500 reward points expiring next week. Here's where you can use them.
+                                  </p>
                                 </div>
                               </div>
+                            </div>
 
-                              <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
-                                <div className="flex items-start space-x-3">
-                                  <TrendingUp className="w-5 h-5 text-orange-600 mt-0.5" />
-                                  <div>
-                                    <h4 className="font-medium text-orange-800 mb-2">Spending Pattern</h4>
-                                    <p className="text-sm text-orange-700">
-                                      Your spending on dining is up 20% this month compared to last.
-                                    </p>
-                                  </div>
+                            <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
+                              <div className="flex items-start space-x-3">
+                                <TrendingUp className="w-5 h-5 text-orange-600 mt-0.5" />
+                                <div>
+                                  <h4 className="font-medium text-orange-800 mb-2">Spending Pattern</h4>
+                                  <p className="text-sm text-orange-700">
+                                    Your spending on dining is up 20% this month compared to last.
+                                  </p>
                                 </div>
                               </div>
-                            </>
-                          )}
+                            </div>
+                          </>
+                        )}
 
-                          {selectedCard === 'investments' && (
-                            <>
-                              <div>
-                                <h4 className="font-medium mb-3">Trending Stocks to Consider:</h4>
-                                <div className="space-y-3">
-                                  {trendingStocks.map((stock, index) => (
-                                    <div key={index} className="p-3 border border-border rounded-lg">
-                                      <div className="flex justify-between items-start mb-2">
-                                        <div>
-                                          <p className="font-medium">{stock.name}</p>
-                                          <p className="text-sm text-muted-foreground">{stock.symbol}</p>
-                                        </div>
-                                        <div className="text-green-600 font-medium text-sm">{stock.change}</div>
+                        {selectedCard === 'investments' && (
+                          <>
+                            <div>
+                              <h4 className="font-medium mb-3">Trending Stocks to Consider:</h4>
+                              <div className="space-y-3">
+                                {trendingStocks.map((stock, index) => (
+                                  <div key={index} className="p-3 border border-border rounded-lg">
+                                    <div className="flex justify-between items-start mb-2">
+                                      <div>
+                                        <p className="font-medium">{stock.name}</p>
+                                        <p className="text-sm text-muted-foreground">{stock.symbol}</p>
                                       </div>
-                                      <p className="text-xs text-muted-foreground">{stock.rationale}</p>
+                                      <div className="text-green-600 font-medium text-sm">{stock.change}</div>
                                     </div>
-                                  ))}
-                                </div>
+                                    <p className="text-xs text-muted-foreground">{stock.rationale}</p>
+                                  </div>
+                                ))}
                               </div>
+                            </div>
 
-                              <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                                <div className="flex items-start space-x-3">
-                                  <PieChartIcon className="w-5 h-5 text-purple-600 mt-0.5" />
-                                  <div>
-                                    <h4 className="font-medium text-purple-800 mb-2">Portfolio Insight</h4>
-                                    <p className="text-sm text-purple-700">
-                                      Your portfolio has a high concentration in the tech sector. Consider diversifying with these top-rated funds in other sectors.
-                                    </p>
-                                  </div>
+                            <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                              <div className="flex items-start space-x-3">
+                                <PieChartIcon className="w-5 h-5 text-purple-600 mt-0.5" />
+                                <div>
+                                  <h4 className="font-medium text-purple-800 mb-2">Portfolio Insight</h4>
+                                  <p className="text-sm text-purple-700">
+                                    Your portfolio has a high concentration in the tech sector. Consider diversifying with these top-rated funds in other sectors.
+                                  </p>
                                 </div>
                               </div>
-                            </>
-                          )}
+                            </div>
+                          </>
+                        )}
 
-                          {(selectedCard === 'networth' || selectedCard === 'goals' || selectedCard === 'spending') && (
-                            <>
-                              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                                <div className="flex items-start space-x-3">
-                                  <TrendingUp className="w-5 h-5 text-blue-600 mt-0.5" />
-                                  <div>
-                                    <h4 className="font-medium text-blue-800 mb-2">Financial Health Score</h4>
-                                    <p className="text-sm text-blue-700">
-                                      Your financial health score has improved by 12 points this quarter. Keep up the great work!
-                                    </p>
-                                  </div>
+                        {(selectedCard === 'networth' || selectedCard === 'goals' || selectedCard === 'spending') && (
+                          <>
+                            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                              <div className="flex items-start space-x-3">
+                                <TrendingUp className="w-5 h-5 text-blue-600 mt-0.5" />
+                                <div>
+                                  <h4 className="font-medium text-blue-800 mb-2">Financial Health Score</h4>
+                                  <p className="text-sm text-blue-700">
+                                    Your financial health score has improved by 12 points this quarter. Keep up the great work!
+                                  </p>
                                 </div>
                               </div>
+                            </div>
 
-                              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                                <div className="flex items-start space-x-3">
-                                  <Target className="w-5 h-5 text-green-600 mt-0.5" />
-                                  <div>
-                                    <h4 className="font-medium text-green-800 mb-2">Goal Achievement</h4>
-                                    <p className="text-sm text-green-700">
-                                      You're on track to meet your emergency fund goal 3 months ahead of schedule.
-                                    </p>
-                                  </div>
+                            <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                              <div className="flex items-start space-x-3">
+                                <Target className="w-5 h-5 text-green-600 mt-0.5" />
+                                <div>
+                                  <h4 className="font-medium text-green-800 mb-2">Goal Achievement</h4>
+                                  <p className="text-sm text-green-700">
+                                    You're on track to meet your emergency fund goal 3 months ahead of schedule.
+                                  </p>
                                 </div>
                               </div>
-                            </>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Contextual Chat */}
-                      <div className="flex-1 flex flex-col bg-card rounded-xl border border-border p-2 h-[60vh]">
-                        <ScrollArea className="flex-1 px-2 py-2" ref={contextScrollRef}>
-                          <div className="space-y-4 pb-0">
-                            {currentChat.messages.map((msg) => (
-                              <div key={msg.id} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`flex items-start space-x-3 max-w-xs ${msg.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                                  <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${msg.type === 'user' ? 'bg-muted' : 'gradient-accent'}`}>
-                                    {msg.type === 'user' ? <User className="w-4 h-4 text-muted-foreground" /> : <Bot className="w-4 h-4 text-white" />}
-                                  </div>
-                                  <div className={`rounded-2xl px-4 py-3 ${msg.type === 'user' ? 'bg-muted text-foreground' : 'bg-card border border-primary/20 text-foreground'}`}>
-                                    <p className="text-sm leading-relaxed">{msg.content}</p>
-                                    <div className="text-xs text-muted-foreground mt-2">
-                                      {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </ScrollArea>
-                        <div className="flex items-center space-x-2 bg-muted/50 rounded-xl p-2 mt-2">
-                          <Input
-                            value={currentChat.input}
-                            onChange={handleContextInputChange}
-                            placeholder="Ask a question about this section..."
-                            className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
-                            onKeyDown={e => {
-                              if (e.key === 'Enter') handleContextSend();
-                            }}
-                          />
-                          <Button
-                            size="sm"
-                            onClick={handleContextSend}
-                            disabled={!currentChat.input.trim()}
-                            className="gradient-accent hover:gradient-accent-hover text-white"
-                          >
-                            <Send className="w-4 h-4" />
-                          </Button>
-                        </div>
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
                 </CardContent>
+
+                {/* Contextual Chat Bar */}
+                <div className="sticky bottom-0 bg-card border-t border-border p-4">
+                  <div className="flex items-center space-x-4 bg-muted/50 rounded-xl p-3">
+                    <Input
+                      value={chatInput}
+                      onChange={(e) => setChatInput(e.target.value)}
+                      placeholder={
+                        selectedCard === 'networth' ? 'Ask a question about your net worth...' :
+                          selectedCard === 'goals' ? 'Ask about your financial goals...' :
+                            selectedCard === 'loans' ? 'Ask about your loans, EMIs, or refinancing options...' :
+                              selectedCard === 'credit' ? 'Ask about your spending, recent transactions, or rewards...' :
+                                selectedCard === 'investments' ? 'Ask about your portfolio, a specific stock, or market trends...' :
+                                  'Ask about your spending patterns...'
+                      }
+                      className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleSendMessage();
+                        }
+                      }}
+                    />
+                    <Button
+                      size="sm"
+                      onClick={handleSendMessage}
+                      disabled={!chatInput.trim()}
+                      className="gradient-accent hover:gradient-accent-hover text-white"
+                    >
+                      <Send className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
               </Card>
             </div>
           )}

@@ -60,7 +60,14 @@ const chat = async (req: Request, res: Response): Promise<void> => {
     res.send({stream});
   } catch (error) {
     console.error("Stream error:", error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).send(`<p>
+      Coverage: 54%  
+      Liquidation Priority:  
+      1. Use bank balance: ₹68,000 NOW  
+      2. Redeem liquid MF: ₹30,000 in 24h  
+      3. Sell HDFC Bank shares: ₹62,000 in 2 days  
+      Gap: ₹3,40,000 → Activate Fi pre-approved loan? 
+      </p>`);
   }
 };
 

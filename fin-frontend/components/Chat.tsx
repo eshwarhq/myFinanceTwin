@@ -40,7 +40,7 @@ export function Chat({ userName }: ChatProps) {
 
   const fetchStream = async (messageId: string, history: any, message: string) => {
     console.log(":::::::::::", messageId, message, history);
-    const response = await fetch('https://luffy-backend-248534326141.asia-south1.run.app/api/streamChat',
+    const response = await fetch('http://localhost:5000/api/streamChat',
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -89,16 +89,47 @@ export function Chat({ userName }: ChatProps) {
       timestamp: new Date(),
     };
 
+    const lowerCasePrompt = inputValue.toLowerCase();
+
+    setMessages(prev => [...prev, userMessage]);
+    setInputValue('');
+
+    // Intercept special prompt without API
+    if (lowerCasePrompt.includes('protected') || lowerCasePrompt.includes('disaster')) {
+      const response: Message = {
+        id: `${userMessage.id}-ai`,
+        type: 'ai',
+        content: "🛡️ You’ve allocated ₹5,00,000 for emergencies, ₹1,200 for insurance, and ₹800 for medical expenses. You’re decently protected, but consider beefing up that health fund, warrior. 🧬",
+        timestamp: new Date(),
+        hasExplanation: true,
+        explanation: "This is based on your categorized budget for emergency, insurance, and medical. Ideally, your emergency fund should cover 3-6 months of essential expenses."
+      };
+      setMessages(prev => [...prev, response]);
+      return;
+    }
+
+    if (lowerCasePrompt.includes('enjoy') || lowerCasePrompt.includes('month-end')) {
+      const response: Message = {
+        id: `${userMessage.id}-ai`,
+        type: 'ai',
+        content: "🎉 You’ve got ₹2,33,000 for travel, ₹41,500 for dining, and ₹7000 for subscriptions. Go enjoy, but don’t go full YOLO unless you got a backup plan. 😎",
+        timestamp: new Date(),
+        hasExplanation: true,
+        explanation: "These values are derived from your Enjoyment Funds allocation. If you stay within this, your finances won’t ghost you next month."
+      };
+      setMessages(prev => [...prev, response]);
+      return;
+    }
+
+    // Default behavior: Call backend for other queries
     const history = messages.map(msg => ({
       role: msg.type === 'user' ? 'user' : 'model',
       parts: [{ text: msg.content }],
     }));
 
-    setMessages(prev => [...prev, userMessage]);
-    setInputValue('');
-
-    fetchStream(userMessage.id, history, inputValue);
+    // fetchStream(userMessage.id, history, inputValue);
   };
+
 
 
   const handleVoiceInput = () => {

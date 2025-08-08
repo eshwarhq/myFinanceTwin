@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => {
       proxy: isDev
         ? {
           '/api': {
-            target: 'https://luffy-backend-248534326141.asia-south1.run.app', // your backend port
+            target: 'http://localhost:5000', // your backend port
             changeOrigin: true,
             secure: false
           },
