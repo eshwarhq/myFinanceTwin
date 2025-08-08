@@ -7,7 +7,6 @@ import { ConnectAccounts } from './components/ConnectAccounts';
 import { BuildingTwin } from './components/BuildingTwin';
 import { Dashboard } from './components/Dashboard';
 import { Chat } from './components/Chat';
-import { Dashboard1 } from './components/Dashboard1';
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -74,18 +73,6 @@ export default function App() {
         <Route path="/dashboard" element={
           isAuthenticated ? (
             <Dashboard
-              userName={userName}
-              isFirstTime={isFirstTime}
-              onOnboardingComplete={handleOnboardingComplete}
-            />
-          ) : (
-            <Navigate to="/" />
-          )
-        } />
-        
-        <Route path="/dashboard1" element={
-          isAuthenticated ? (
-            <Dashboard1
               userName={userName}
               isFirstTime={isFirstTime}
               onOnboardingComplete={handleOnboardingComplete}
